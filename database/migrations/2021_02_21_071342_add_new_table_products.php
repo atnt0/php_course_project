@@ -13,8 +13,6 @@ class AddNewTableProducts extends Migration
      */
     public function up()
     {
-        //
-        // тут стоит добавить условие "нет ли"
         if ( !Schema::hasTable('products') ) {
             Schema::create('products', function (Blueprint $table) {
                 $table->id();
