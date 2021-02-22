@@ -6,6 +6,10 @@
 
 require('./bootstrap');
 
+
+require('./scripts/register/captcha');
+
+
 window.Vue = require('vue').default;
 
 /**
