@@ -40,7 +40,7 @@
 **products**: id, article_number, price, tax, quantity, category_id, user_own_id, uuid, title, title_ua, title_ru, description, description_ua, description_ru, created_at, updated_at
 
 
-// один ко многим фотографиям
+// многие к одному продукту - фотографии
 **product_photos**: id, product_id, index, file_name, desctiprion, desctiprion_ua, desctiprion_ru, created_at, updated_at
 
 
@@ -86,7 +86,7 @@
 
 // многие ко многим - статус заказа
 
-**status_order**: id, product_id, status_id, created_at, updated_at
+**status_order**: id, order_id, status_id, created_at, updated_at
 
 
 =====================

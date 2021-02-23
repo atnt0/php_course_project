@@ -35,6 +35,9 @@ class CreateProductsTable extends Migration
                 $table->string('description_ua');
                 $table->string('description_ru');
 
+                $table->string('meta_keywords', 255);
+                $table->string('meta_description', 255);
+
                 $table->timestamps();
             });
         }
