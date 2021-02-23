@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoleUserTable extends Migration
+class CreateProductTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateRoleUserTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('role_user')) {
-            Schema::create('role_user', function (Blueprint $table) {
+        if (!Schema::hasTable('product_tags')) {
+            Schema::create('product_tags', function (Blueprint $table) {
                 $table->id();
-                $table->integer('user_id')->unsigned();
-                $table->integer('role_id')->unsigned();
+                $table->string('title', 255);
+                $table->string('title_ua', 255);
+                $table->string('title_ru', 255);
 
-                $table->timestamps();
+                $table->timestamp = false;
             });
         }
     }
@@ -31,6 +32,6 @@ class CreateRoleUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('product_tags');
     }
 }

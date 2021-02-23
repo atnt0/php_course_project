@@ -18,24 +18,24 @@ class RoleUserSeeder extends Seeder
     {
         $arrayRoleUsers = [
             [
+                'role' => 'admin',
                 'email' => 'admin@admin.com', // Chuck Norris
-                'role' => 'Admin',
             ],
             [
+                'role' => 'manager',
                 'email' => 'manager@manager.com', // Алексей Гайдаров
-                'role' => 'Manager',
             ],
             [
+                'role' => 'customer',
                 'email' => 'customer1@customer1.com', // Махлин Федор
-                'role' => 'Customer',
             ],
             [
+                'role' => 'customer',
                 'email' => 'customer2@customer2.com', // Кимачинский Борис
-                'role' => 'Customer',
             ],
             [
+                'role' => 'customer',
                 'email' => 'customer3@customer3.ua', // Михайленко Кирилл
-                'role' => 'Customer',
             ],
         ];
 
@@ -49,8 +49,9 @@ class RoleUserSeeder extends Seeder
 
                     if ( !$roleFound ) {
                         $user = User::where('email', '=', $roleUser['email'])->firstOrFail();
-                        $role = Role::where('title', '=', $roleUser['role'])->firstOrFail();
+                        $role = Role::where('name', '=', $roleUser['role'])->firstOrFail();
 
+                        //$user->assignRole($role);
                         $user->roles()->attach($role);
                     }
                 }

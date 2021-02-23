@@ -16,17 +16,35 @@ class UserRolesSeeder extends Seeder
     public function run()
     {
         $arrayRoles = [
-            'Admin', // администрацтор-наполнятель
-            'Manager', //менеджер-продавец
-            'Customer', // зарегистрированный покупатель - он же пользователь
+            [
+                'name' => 'admin', // администрацтор-наполнятель
+                'title' => 'Admin',
+                'title_ua' => 'Адмін',
+                'title_ru' => 'Админ',
+            ],
+            [
+                'name' => 'manager', //менеджер-продавец
+                'title' => 'Manager',
+                'title_ua' => 'Менеджер',
+                'title_ru' => 'Менеджер',
+            ],
+            [
+                'name' => 'customer', // зарегистрированный покупатель - он же пользователь
+                'title' => 'Customer',
+                'title_ua' => 'Клієнт',
+                'title_ru' => 'Покупатель',
+            ],
         ];
 
         if( count($arrayRoles) > 0 ) {
             foreach ($arrayRoles as $role) {
-                $roleFound = DB::table('user_roles')->where('title', '=', $role)->first();
+                $roleFound = DB::table('user_roles')->where('name', '=', $role['name'])->first();
                 if( !$roleFound ) {
                     $admin = new Role();
-                    $admin->title = $role;
+                    $admin->name = $role['name'];
+                    $admin->title = $role['title'];
+                    $admin->title_ua = $role['title_ua'];
+                    $admin->title_ru = $role['title_ru'];
                     $admin->save();
                 }
             }

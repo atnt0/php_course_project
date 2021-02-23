@@ -16,7 +16,11 @@ class CreateUserRolesTable extends Migration
         if (!Schema::hasTable('user_roles')) {
             Schema::create('user_roles', function (Blueprint $table) {
                 $table->id();
-                $table->string('title')->unique();
+                $table->string('name')->unique();
+                $table->string('title')->unique(); // en
+                $table->string('title_ua')->unique();
+                $table->string('title_ru')->unique();
+                //$table->timestamp = false; // без этого ошибка в миграции
                 $table->timestamps();
             });
         }
