@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNewTableProducts extends Migration
+class CreateRoleUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class AddNewTableProducts extends Migration
      */
     public function up()
     {
-        if ( !Schema::hasTable('products') ) {
-            Schema::create('products', function (Blueprint $table) {
+        if (!Schema::hasTable('role_user')) {
+            Schema::create('role_user', function (Blueprint $table) {
                 $table->id();
-                $table->string('uuid')->unique();
-                $table->string('articul_code');
-                $table->string('title');
-
-                //$table->timestamp('failed_at')->useCurrent(); // original
+                $table->integer('user_id')->unsigned();
+                $table->integer('role_id')->unsigned();
                 //$table->timestamp = false;
                 $table->timestamps();
             });
@@ -34,6 +31,6 @@ class AddNewTableProducts extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('role_user');
     }
 }
