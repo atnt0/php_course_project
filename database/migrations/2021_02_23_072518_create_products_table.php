@@ -18,13 +18,16 @@ class CreateProductsTable extends Migration
                 $table->id();
 
                 $table->string('article_number');
-                $table->integer('price');
-                $table->integer('tax');
-                $table->integer('quantity'); // ->nullable() // _in_stock // на складе
-                $table->integer('status_id')->unsigned();
+
+                $table->integer('price')->unsigned(); //TODO не забыть про умножение на 10 тысяч!!!
+                $table->integer('tax')->unsigned(); // та же история про 10 тысяч!
+                $table->integer('quantity')->unsigned(); // ->nullable() // _in_stock // иличество на складе
+
                 $table->bigInteger('category_id')->unsigned();
                 $table->bigInteger('user_own_id');
+
                 $table->string('uuid');
+
                 $table->string('title', 255);
                 $table->string('title_ua', 255);
                 $table->string('title_ru', 255);

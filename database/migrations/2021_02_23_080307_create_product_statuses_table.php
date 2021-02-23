@@ -16,11 +16,14 @@ class CreateProductStatusesTable extends Migration
         if (!Schema::hasTable('product_statuses')) {
             Schema::create('product_statuses', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
-                $table->string('title');
-                $table->string('title_ua');
-                $table->string('title_ru');
-                $table->timestamp = false;
+                $table->string('name'); // внутреннее имя
+
+                $table->string('title', 32);
+                $table->string('title_ua', 32);
+                $table->string('title_ru', 32);
+
+                //$table->timestamp = false;
+                $table->timestamps();
             });
         }
     }

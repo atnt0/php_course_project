@@ -17,6 +17,7 @@
 ##### **План базы данных:**
 
 ===================== 
+
 Авторизация:
 
 **users**: id, name, block, email, email_verified_at, password, remember_token, created_at, updated_at, blocked_at
@@ -26,39 +27,62 @@
 **user_roles**: id, title, created_at, updated_at
 
 **password_resets**: email, token, created_at
+
 =====================
 
 
 ===================== 
-Основные таблицы
+
+Основные таблицы:
 
 // продукты/товары
-**products**: id, article_number, price, tax, quantity, status_id, category_id, user_own_id, uuid, title, description, created_at, updated_at
 
-// один ко многим - статус продукта - 
-**product_statuses**: id, title, created_at, updated_at
+**products**: id, article_number, price, tax, quantity, category_id, user_own_id, uuid, title, title_ua, title_ru, description, description_ua, description_ru, created_at, updated_at
+
+// статусы продукта
+
+**product_statuses**: id, name, title, title_ua, title_ru
+
+// многие ко многим - статус продукта
+
+**status_product**: id, product_id, status_id, created_at, updated_at
 
 
 
-// один продукт к одной категории - категории
-**product_categories**: id, parent_category_id, title, description, created_at, updated_at
+// один ко многим продуктам - категории
+**product_categories**: id, parent_id, title_ua, title_ru, description, description_ua, description_ru, created_at, updated_at
 
 
 
 // тэги
-**product_tags**: id, title, created_at, updated_at
+
+**product_tags**: id, title, title_ua, title_ru, created_at, updated_at
+
+
 // многие ко многим - тэги
-**product_tag**: id, product_id, tag_id
+
+**product_tag**: id, product_id, tag_id, created_at, updated_at
+
 
 
 // заказы/подтвержденные корзины
-**orders**: id, user_id(can be null), status_id, comment, address, email, phone, created_at, updated_at
 
-// один ко многим - статус заказа
-**order_statuses**: id, title, created_at, updated_at
+**orders**: id, user_own_id(can be null), status_id, comment, email, phone, address_city, address_zip, address_street, address_house, address_floor, address_apart, address_np_number, guest_ip, guest_useragent, created_at, updated_at
+
 
 // многие ко многим - продукты/товары
-**order_product**: id, product_id, order_id, quantity
+
+**product_order**: id, order_id, product_id, quantity
+
+
+// статусы заказа
+
+**order_statuses**: id, name, title, title, title_ua, title_ru
+
+// многие ко многим - статус заказа
+
+**status_order**: id, product_id, status_id, created_at, updated_at
+
 
 =====================
 
@@ -69,18 +93,17 @@
 
 
 ===================== 
-Идей на будущее
 
-// многие ко многим - варианты количества 
-**product_quantities**: id, product_id, title
+Идей на будущее:
 
-**product_quantity**: id, product_id, product_quantity_id
+// купоны на продукцию или наборы
 
-// многие к одному - жалобы
-~~_**product_complaints**: id, user_id, instruction_id, instruction_сomplaint_status_id, description, created_at, updated_at~~_~~
-// состояние одобрение жалоб администрацией
-~~_**product_complaint_statuses**: id, title, created_at, updated_at_~~
+// варианты количества/цвет,форма/набор, что-то еще?
 
-// Product Attributes
+// атрибуты продукта/товара
+
+// голосовалки/звездочки
+
+// жалобы
 
 =====================

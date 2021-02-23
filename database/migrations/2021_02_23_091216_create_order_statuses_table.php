@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagProductTable extends Migration
+class CreateOrderStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateTagProductTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('tag_product')) {
-            Schema::create('tag_product', function (Blueprint $table) {
+        if ( !Schema::hasTable('order_statuses') ) {
+            Schema::create('order_statuses', function (Blueprint $table) {
                 $table->id();
-                $table->integer('product_id')->unsigned();
-                $table->integer('tag_id')->unsigned();
+                $table->string('name'); // внутреннее имя
 
-                //$table->timestamp = false;
+                $table->string('title', 32);
+                $table->string('title_ua', 32);
+                $table->string('title_ru', 32);
+
                 $table->timestamps();
             });
         }
@@ -32,6 +34,6 @@ class CreateTagProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tag_product');
+        Schema::dropIfExists('order_statuses');
     }
 }

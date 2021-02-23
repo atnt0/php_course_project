@@ -20,7 +20,7 @@ class CreateProductTagsTable extends Migration
                 $table->string('title_ua', 255);
                 $table->string('title_ru', 255);
 
-                $table->timestamp = false;
+                $table->timestamps();
             });
         }
     }
