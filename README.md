@@ -14,7 +14,7 @@
 
 ==============================================================
 
-##### **План базы данных:**
+##### **План Базы Данных:**
 
 ===================== 
 
@@ -22,9 +22,9 @@
 
 **users**: id, name, block, email, email_verified_at, password, remember_token, created_at, updated_at, blocked_at
 
-**user_role**: id, user_id, role_id, created_at, updated_at
-
 **user_roles**: id, title, created_at, updated_at
+
+**role_user**: id, user_id, role_id, created_at, updated_at
 
 **password_resets**: email, token, created_at
 
@@ -38,6 +38,11 @@
 // продукты/товары
 
 **products**: id, article_number, price, tax, quantity, category_id, user_own_id, uuid, title, title_ua, title_ru, description, description_ua, description_ru, created_at, updated_at
+
+
+// один ко многим фотографиям
+**product_photos**: id, product_id, index, file_name, desctiprion, desctiprion_ua, desctiprion_ru, created_at, updated_at
+
 
 // статусы продукта
 
@@ -88,12 +93,6 @@
 
 
 
-
-
-
-
-===================== 
-
 Идей на будущее:
 
 // купоны на продукцию или наборы
@@ -107,3 +106,7 @@
 // жалобы
 
 =====================
+
+
+==============================================================
+

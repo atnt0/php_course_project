@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
                 $table->integer('quantity')->unsigned(); // ->nullable() // _in_stock // иличество на складе
 
                 $table->bigInteger('category_id')->unsigned();
-                $table->bigInteger('user_own_id');
+                $table->bigInteger('user_own_id')->unsigned();
 
                 $table->string('uuid');
 
