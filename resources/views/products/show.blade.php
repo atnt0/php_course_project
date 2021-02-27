@@ -1,4 +1,3 @@
-{{--{{ dd('111') }}--}}
 @extends('base')
 
 @section('main')
@@ -88,11 +87,11 @@
                     <div class="buttons">
 
                             <div class="buttons-item d-inline-block">
-                                <a href="{{ route('product.edit', $product->id) }}" class="btn btn-primary">Edit</a>
+                                <a href="{{ route('product.edit', [$product->uuid]) }}" class="btn btn-primary">Edit</a>
                             </div>
 
                             <div class="buttons-item d-inline-block">
-                                <form action="{{ route('product.destroy', $product->id) }}" method="post">
+                                <form action="{{ route('product.destroy', [$product->uuid]) }}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger" type="submit">Delete</button>

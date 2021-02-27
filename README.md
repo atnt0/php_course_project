@@ -20,7 +20,7 @@
 
 ===================== 
 
-ProductsController - контроллер для товаров
+~~ProductsController - контроллер для товаров~~
 ProductCategoriesController - контроллер для категорий товаров
 ProductTagsController - контроллер для тегов продуктов
 ProductPhotosController - контроллер для фотографий продукта

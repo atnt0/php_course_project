@@ -17,9 +17,8 @@
 
         </td>
         <td>
-
+            <b>{{ $product->product_status_title_ru }}</b>
         </td>
-
         <td>
             <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View</a>
         </td>

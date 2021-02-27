@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\StatusProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class ProductsController extends Controller
 {
     const PRODUCT_MONEY_FIX_NUMBER = 10000; // для точных операций с денежными значениями
+
+    const PRODUCT_DEFAULT_STATUS_NAME = 'hiddencompletely'; //
+
 
     /**
      * Display a listing of the resource.
@@ -65,7 +69,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -76,7 +80,46 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title_ru' => 'required|min:4',
+            'description_ru' => 'required|min:10',
+            'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'quantity' => 'required|integer', // unsigned
+        ]);
+
+        //$rr = self::PRODUCT_DEFAULT_STATUS_ID;
+
+        $uuidNew  = \Webpatser\Uuid\Uuid::generate()->string;
+
+        $product = new Product([
+            'article_number' => 0, //TODO придумать как генерировать уникальный артикул
+            'price' => $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER, // x 10000
+            'tax' => $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER, // x 10000
+            'quantity' => $request->get('quantity'),
+            'category_id' => 0,
+            'user_own_id' => Auth::user()->id,
+            'uuid' => $uuidNew,
+            'title_ru' => $request->get('title_ru'),
+            'description_ru' => $request->get('description_ru'),
+            'meta_keywords' => '',
+            'meta_description' => '',
+        ]);
+
+        $product->save();
+
+        $defaultStatus = StatusProduct::where('name', '=', self::PRODUCT_DEFAULT_STATUS_NAME)->firstOrFail();
+
+        if( !empty($defaultStatus) )
+        {
+            StatusProduct::createManyToManyWithStatus($product->id, $defaultStatus->id);
+        }
+
+
+
+        return redirect()
+            ->route('product.show', [$product->uuid])
+            ->with('success', 'Product saved!');
     }
 
     /**
@@ -94,14 +137,10 @@ class ProductsController extends Controller
         if( empty($product) )
             abort(404);
 
-        $dataProduct = [];
-
         $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
-
-
 
         $dataProduct = [
             'price_float' => $price_float,
@@ -122,9 +161,31 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($uuid)
     {
-        //
+        $product = Product::where('uuid', '=', $uuid)->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+        $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+        $tax_float = round($product->tax / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+
+        $user_own = User::find($product->user_own_id);
+        $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
+
+        $dataProduct = [
+            'price_float' => $price_float,
+            'tax_float' => $tax_float,
+            //TODO может перенести в user?
+            'user_own' => [
+                'id' => $user_own->id,
+                'name' => $user_own->name,
+                'you' => $user_own_you, // " [id: ". $user_own->id ."]"
+            ],
+        ];
+
+        return view('products.edit', compact('product', 'dataProduct'));
     }
 
     /**
@@ -134,9 +195,33 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
-        //
+        $request->validate([
+            'title_ru' => 'required|min:4',
+            'description_ru' => 'required|min:10',
+            'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'quantity' => 'required|integer',
+        ]);
+
+        $product = Product::where('uuid', '=', $uuid)->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+
+        $product->title_ru = $request->get('title_ru');
+        $product->description_ru = $request->get('description_ru');
+        $product->price = $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+        $product->tax = $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+        $product->quantity = $request->get('quantity');
+
+        $product->save();
+
+        return redirect()
+            ->route('product.edit', [$product->uuid])
+            ->with('success', 'Product updated!');
     }
 
     /**
@@ -145,8 +230,17 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($uuid)
     {
-        //
+        $product = Product::where('uuid', '=', $uuid)->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+        $product->delete();
+
+        return redirect()
+            ->route('product.index')
+            ->with('success', 'Product deleted!');
     }
 }
