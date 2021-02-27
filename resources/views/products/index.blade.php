@@ -1,4 +1,4 @@
-{{ dd($products) }}
+{{--{{ dd([$products, $dataProducts]) }}--}}
 @extends('base')
 
 @section('main')
@@ -24,7 +24,7 @@
                     {{--                    Only registred users can be use this function.--}}
                 @else
                     <div class="col">
-                        <a href="{{ route('products.create') }}" class="mb-3 btn btn-info">Add product</a>
+                        <a href="{{ route('product.create') }}" class="mb-3 btn btn-info text-white">Add product</a>
                     </div>
                 @endif
 
@@ -32,7 +32,7 @@
                     <div class="float-right">
                         <form id="searchForm" name="searchForm" action="{{ route('product.search.ajax') }}" method="post">
                             @csrf
-                            <input type="text" name="searchString" placeholder="product name" />
+                            <input type="text" name="searchString" placeholder="name" />
                             <button class="btn btn-info text-white" type="submit">Search</button>
                         </form>
                     </div>
@@ -44,7 +44,7 @@
             <table class="table table-striped" data-table="insert_here">
                 <thead>
                 <tr>
-                    <th>Id</th>
+{{--                    <th>Id</th>--}}
                     <th>UUID</th>
                     <th>Title ru</th>
                     <th>Description ru</th>

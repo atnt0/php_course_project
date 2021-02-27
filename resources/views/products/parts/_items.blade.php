@@ -1,8 +1,8 @@
 @foreach($products as $product)
     <tr>
-        <td>
-            {{ $product->id }}
-        </td>
+{{--        <td>--}}
+{{--            {{ $product->id }}--}}
+{{--        </td>--}}
         <td>
             {{ $product->uuid }}
         </td>
@@ -21,7 +21,7 @@
         </td>
 
         <td>
-            <a href="{{ route('product.show', $product->id) }}" class="btn btn-primary">View</a>
+            <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View</a>
         </td>
         <td>
 
