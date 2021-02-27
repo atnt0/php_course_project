@@ -12,6 +12,8 @@ class StatusProduct extends Model
 
     protected $table = 'product_statuses';
 
+    //TODO стоит изменить название на множественное число, чтобы не путаться со связывающей таблицей + у StatusOrder
+
     /**
      * @param $product_id
      * @param $status_id

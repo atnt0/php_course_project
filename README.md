@@ -20,12 +20,29 @@
 
 ===================== 
 
-~~ProductsController - контроллер для товаров~~
-ProductCategoriesController - контроллер для категорий товаров
-ProductTagsController - контроллер для тегов продуктов
-ProductPhotosController - контроллер для фотографий продукта
-OrdersController - контроллер для заказов
-UsersController - контроллер для управления пользователями
+<p><input type="checkbox" checked>
+    ProductsController - контроллер для товаров
+</p>
+
+<p><input type="checkbox" >
+    ProductCategoriesController - контроллер для категорий товаров
+</p>
+
+<p><input type="checkbox" >
+    ProductTagsController - контроллер для тегов продуктов
+</p>
+
+<p><input type="checkbox" >
+    ProductPhotosController - контроллер для фотографий продукта
+</p>
+
+<p><input type="checkbox" >
+    OrdersController - контроллер для заказов
+</p>
+
+<p><input type="checkbox" >
+    UsersController - контроллер для управления пользователями
+</p>
 
 ==============================================================
 
