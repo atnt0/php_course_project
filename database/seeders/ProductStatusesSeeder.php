@@ -6,7 +6,7 @@ use App\Models\StatusProduct;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProductStatuses extends Seeder
+class ProductStatusesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

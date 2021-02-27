@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,20 +16,46 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 */
 
+/**
+ * Section routes: Начальная страница
+ */
 Route::get('/', function () {
     return view('welcome');
 });
 
-// оступно только для авторизированных пользователей, что-то вроде dashboard для авторизированных пользователей
-//Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
-Route::get('/product', [ProductController::class, 'index' ])->name('product');
-
-
-//Route::get('refresh-captcha', '___Controller@refreshCaptcha')->name('refreshCaptcha');
+/**
+ * Section routes: Авторизация
+ */
 Route::get('/register/captcha-refresh', [RegisterController::class, 'refreshCaptcha'])->name('refreshCaptcha');
 Auth::routes();
+
+
+
+/**
+ * Section routes: Продукты
+ */
+//Route::get('/product', [ProductsController::class, 'index' ])->name('products');
+
+Route::post('/product/search_ajax', [ProductsController::class, 'searchAjax'])
+    ->name('product.search.ajax');
+
+Route::resource('/product', ProductsController::class)
+    ->names([
+        // get-pages
+        'index' => 'product.index', // all products
+        'show' => 'product.show',
+        'create' => 'product.create',
+        'edit' => 'product.edit',
+        // post-events
+        'store' => 'product.store',
+        'update' => 'product.update',
+        'destroy' => 'product.destroy',
+    ]);
+
+
+
 
 
 

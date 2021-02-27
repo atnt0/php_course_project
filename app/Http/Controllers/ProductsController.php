@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
-class OrderConstroller extends Controller
+class ProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +14,20 @@ class OrderConstroller extends Controller
      */
     public function index()
     {
-        return view('order');
+
+        //$products = Product::all();
+        $products = Product::getProducts();
+
+        if( empty($products) )
+            abort(404);
+
+        // получить одно последнее изменение статуса - статус продукта
+        // получить категорию продукта
+        // получить список тегов продукта
+        // получить список фотографий продукта в сортированном виде по порядку
+
+
+        return view('products.index', compact('products'));
     }
 
     /**
