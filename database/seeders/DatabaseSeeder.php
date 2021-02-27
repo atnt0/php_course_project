@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserRolesSeeder::class);
         $this->call(RoleUserSeeder::class);
         $this->call(ProductStatuses::class);
+        $this->call(OrderStatuses::class);
     }
 }
