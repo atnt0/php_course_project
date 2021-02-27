@@ -17,7 +17,7 @@ class UserRolesSeeder extends Seeder
     {
         $arrayRoles = [
             [
-                'name' => 'admin', // администрацтор-наполнятель
+                'name' => 'admin', // администратор-наполнятель
                 'title' => 'Admin',
                 'title_ua' => 'Адмін',
                 'title_ru' => 'Админ',
