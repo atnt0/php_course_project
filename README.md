@@ -20,12 +20,12 @@
 
 =====================
 
-<p><input type="checkbox" checked>
+<p><label for="text1"><input type="checkbox" id="text1" name="text1" checked></label>
     ProductsController - контроллер для товаров
 </p>
 
-<p><input type="checkbox" >
-    ProductCategoriesController - контроллер для категорий товаров
+<p><label for="text2"><input type="checkbox" id="text2" name="text2" >
+    ProductCategoriesController - контроллер для категорий товаров</label>
 </p>
 
 <p><input type="checkbox" >
