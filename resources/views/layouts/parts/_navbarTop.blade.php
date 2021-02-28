@@ -11,6 +11,9 @@
     <li class="nav-item">
         <a class="nav-link nav-link" href="{{ route('product.category.index') }}">Product Categories</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link nav-link" href="{{ route('product.photo.index') }}">Product Photos</a>
+    </li>
 
 {{--    @if ( Auth::user() && Auth::user()->hasRole('admin') )--}}
 {{--        <li class="nav-item">--}}

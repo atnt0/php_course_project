@@ -23,18 +23,11 @@ class CreateProductsTable extends Migration
                 $table->bigInteger('tax')->unsigned(); // та же история про 10 тысяч!
                 $table->bigInteger('quantity')->unsigned(); // ->nullable() // _in_stock // количество на складе
 
-//                $table->bigInteger('category_id')->unsigned();
-//                $table->foreign('category_id')->references('id')->on('product_categories');
-
                 $table->unsignedBigInteger('category_id');
-                $table->foreign('category_id')
-                    ->references('id')->on('product_categories')
-                    ->onDelete('cascade');
-
 
                 $table->bigInteger('user_own_id')->unsigned();
 
-                $table->string('uuid', 36);
+                $table->string('uuid', 36)->unique();
 
                 $table->string('title', 255)->nullable()->default('');
                 $table->string('title_ua', 255)->nullable()->default('');
@@ -46,6 +39,8 @@ class CreateProductsTable extends Migration
                 $table->string('meta_keywords', 255)->default('');
                 $table->string('meta_description', 255)->default('');
 
+                $table->foreign('category_id')->references('id')->on('product_categories');
+                    //->onDelete('cascade');
 
 
                 $table->timestamps();

@@ -20,13 +20,15 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ProductCategoriesSeeder::class);
 
-        $this->call(ProductStatusesSeeder::class);
         $this->call(ProductsSeeder::class);
+
+        $this->call(ProductStatusesSeeder::class);
         $this->call(StatusProductSeeder::class);
+
+        $this->call(ProductPhotosSeeder::class);
 
         $this->call(OrderStatusesSeeder::class);
         $this->call(OrdersSeeder::class);
-
 
 
     }

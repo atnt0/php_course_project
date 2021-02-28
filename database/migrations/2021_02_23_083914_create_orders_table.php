@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
                 $table->id();
 
                 $table->integer('user_own_id')->unsigned()->nullable();
-                $table->integer('status_id')->unsigned();
 
                 $table->string('comment', 255); // customer_comment
                 $table->string('email', 255); // customer_email

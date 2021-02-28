@@ -7,6 +7,7 @@ use App\Models\StatusProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Webpatser\Uuid\Uuid;
 
 class ProductsController extends Controller
 {
@@ -90,7 +91,7 @@ class ProductsController extends Controller
 
         //$rr = self::PRODUCT_DEFAULT_STATUS_ID;
 
-        $uuidNew  = \Webpatser\Uuid\Uuid::generate()->string;
+        $uuidNew  = Uuid::generate()->string;
 
         $product = new Product([
             'article_number' => 0, //TODO придумать как генерировать уникальный артикул

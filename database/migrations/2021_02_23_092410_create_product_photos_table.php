@@ -15,6 +15,9 @@ class CreateProductPhotosTable extends Migration
     {
         Schema::create('product_photos', function (Blueprint $table) {
             $table->id();
+
+            $table->string('uuid', 36)->unique();
+
             $table->bigInteger('product_id')->unsigned();
 
             $table->integer('index')->unsigned(); // порядковый номер, 0 - первое, отображается как главное изображение
@@ -23,9 +26,9 @@ class CreateProductPhotosTable extends Migration
 
             $table->bigInteger('user_own_id')->unsigned();
 
-            $table->string('description', 255);
-            $table->string('description_ua', 255);
-            $table->string('description_ru', 255);
+            $table->string('description', 255)->nullable()->default('');
+            $table->string('description_ua', 255)->nullable()->default('');
+            $table->string('description_ru', 255)->nullable()->default('');
 
             $table->foreign('product_id')->references('id')->on('products');
 

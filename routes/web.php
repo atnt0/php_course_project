@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoriesController;
+use \App\Http\Controllers\ProductPhotosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +36,35 @@ Auth::routes();
 
 
 /**
+ * Section routes: Фотографии продуктов
+ *
+ * ВНИМАНИЕ Фотографии сейчас реализованы в классическом виде - отдельной загрузкой, но
+ * в дальнейшем основные действия - загрузка, обновление и удаление будут перенесены на их ajax-версии
+ */
+Route::resource('/product/photo', ProductPhotosController::class)
+    // ->only([ 'index', 'show' ])
+    //->except([ 'create', 'edit', 'update' ])
+    // исключить
+    ->except([ 'show' ])
+    ->names([
+        // get-pages
+        'index' => 'product.photo.index', // all categories
+        //'show' => 'product.photo.show',
+        'create' => 'product.photo.create',
+        'edit' => 'product.photo.edit',
+        // post-events
+        'store' => 'product.photo.store',
+        'update' => 'product.photo.update',
+        'destroy' => 'product.photo.destroy',
+
+        // ajax
+    ]);
+
+
+/**
  * Section routes: Категории продуктов
  */
-
 Route::resource('/product/category', ProductCategoriesController::class)
-    // ->only([ 'index', 'show' ])
-    //->except([ 'create', 'edit', 'update' ]) // исключить
     ->names([
         // get-pages
         'index' => 'product.category.index', // all categories
