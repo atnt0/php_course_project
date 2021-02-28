@@ -128,9 +128,26 @@ class ProductPhotosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
-        //
+        $request->validate([
+//            'product_uuid' => 'required|regex:/^[a-f0-9]{8}\-[a-f0-9]{4}\-4[a-f0-9]{3}\-(8|9|a|b)[a-f0-9]{3}\-[a-f0-9]{12}?$/',
+            'product_uuid' => 'required|uuid',
+            'description_ru' => 'max:255',
+        ]);
+
+        $productPhoto = ProductPhotos::where('uuid', '=', $uuid)->firstOrFail();
+
+        if( empty($productPhoto) )
+            abort(404);
+
+        $productPhoto->description_ru = $request->get('description_ru');
+
+        $productPhoto->save();
+
+        return redirect()
+            ->route('product.photo.edit', [$productPhoto->uuid])
+            ->with('success', 'Product Photo updated!');
     }
 
     /**
