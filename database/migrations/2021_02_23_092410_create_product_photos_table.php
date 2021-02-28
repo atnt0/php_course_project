@@ -15,7 +15,7 @@ class CreateProductPhotosTable extends Migration
     {
         Schema::create('product_photos', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id')->unsigned();
+            $table->bigInteger('product_id')->unsigned();
 
             $table->integer('index')->unsigned(); // порядковый номер, 0 - первое, отображается как главное изображение
 
@@ -26,6 +26,8 @@ class CreateProductPhotosTable extends Migration
             $table->string('description', 255);
             $table->string('description_ua', 255);
             $table->string('description_ru', 255);
+
+            $table->foreign('product_id')->references('id')->on('products');
 
             $table->timestamps();
         });
@@ -38,6 +40,9 @@ class CreateProductPhotosTable extends Migration
      */
     public function down()
     {
+        Schema::table('product_photos', function (Blueprint $table) {
+            $table->dropForeign(['product_id']);
+        });
         Schema::dropIfExists('product_photos');
     }
 }

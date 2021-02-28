@@ -17,9 +17,13 @@ class CreateProductOrderTable extends Migration
             Schema::create('product_order', function (Blueprint $table) {
                 $table->id();
 
-                $table->integer('order_id')->unsigned();
-                $table->integer('product_id')->unsigned();
+                $table->bigInteger('order_id')->unsigned();
+                $table->bigInteger('product_id')->unsigned();
+
                 $table->integer('quantity'); // заказанное количество
+
+                $table->foreign('order_id')->references('id')->on('orders');
+                $table->foreign('product_id')->references('id')->on('products');
 
                 $table->timestamp = false;
             });
@@ -33,6 +37,10 @@ class CreateProductOrderTable extends Migration
      */
     public function down()
     {
+        Schema::table('product_order', function (Blueprint $table) {
+            $table->dropForeign(['order_id']);
+            $table->dropForeign(['product_id']);
+        });
         Schema::dropIfExists('product_order');
     }
 }

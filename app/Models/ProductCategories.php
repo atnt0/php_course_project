@@ -9,6 +9,6 @@ class ProductCategories extends Model
 {
     use HasFactory;
 
-    public $table = "product_photos";
+    public $table = "product_categories";
 
 }
