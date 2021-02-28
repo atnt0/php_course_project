@@ -17,13 +17,15 @@ class CreateProductCategoriesTable extends Migration
             Schema::create('product_categories', function (Blueprint $table) {
                 $table->id();
 
-                $table->integer('parent_id')->unsigned(); // parent category id
+                $table->bigInteger('parent_id')->unsigned()->nullable(); // parent category id
                 $table->string('title', 255);
                 $table->string('title_ua', 255);
                 $table->string('title_ru', 255);
                 $table->string('description');
                 $table->string('description_ua');
                 $table->string('description_ru');
+
+                $table->foreign('parent_id')->references('id')->on('product_categories');
 
                 $table->timestamps();
             });

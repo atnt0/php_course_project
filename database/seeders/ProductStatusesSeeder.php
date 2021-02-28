@@ -46,6 +46,7 @@ class ProductStatusesSeeder extends Seeder
                 'title_ua' => 'Немає в наявності',
                 'title_ru' => 'Нет в наличии', // закончился, Распродано
             ],
+            // Є в наявності
         ];
 
         if( count($arrayStatuses) > 0 ){

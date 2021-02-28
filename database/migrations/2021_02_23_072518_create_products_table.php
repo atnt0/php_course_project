@@ -13,7 +13,7 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('products')) {
+        if ( !Schema::hasTable('products') ) {
             Schema::create('products', function (Blueprint $table) {
                 $table->id();
 
@@ -23,7 +23,15 @@ class CreateProductsTable extends Migration
                 $table->bigInteger('tax')->unsigned(); // та же история про 10 тысяч!
                 $table->bigInteger('quantity')->unsigned(); // ->nullable() // _in_stock // количество на складе
 
-                $table->bigInteger('category_id')->unsigned();
+//                $table->bigInteger('category_id')->unsigned();
+//                $table->foreign('category_id')->references('id')->on('product_categories');
+
+                $table->unsignedBigInteger('category_id');
+                $table->foreign('category_id')
+                    ->references('id')->on('product_categories')
+                    ->onDelete('cascade');
+
+
                 $table->bigInteger('user_own_id')->unsigned();
 
                 $table->string('uuid', 36);
@@ -38,6 +46,8 @@ class CreateProductsTable extends Migration
                 $table->string('meta_keywords', 255)->default('');
                 $table->string('meta_description', 255)->default('');
 
+
+
                 $table->timestamps();
             });
         }
@@ -50,6 +60,9 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+        });
         Schema::dropIfExists('products');
     }
 }
