@@ -11,4 +11,17 @@ class ProductCategories extends Model
 
     public $table = "product_categories";
 
+
+    protected $fillable = [
+        'title',
+        'title_ua',
+        'title_ru',
+        'description',
+        'description_ua',
+        'description_ru',
+//        'meta_keywords',
+//        'meta_description',
+    ];
+
+
 }

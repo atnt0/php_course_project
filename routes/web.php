@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProductCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,26 @@ Route::get('/', function () {
 Route::get('/register/captcha-refresh', [RegisterController::class, 'refreshCaptcha'])->name('refreshCaptcha');
 Auth::routes();
 
+
+
+/**
+ * Section routes: Категории продуктов
+ */
+
+Route::resource('/product/category', ProductCategoriesController::class)
+    // ->only([ 'index', 'show' ])
+    //->except([ 'create', 'edit', 'update' ]) // исключить
+    ->names([
+        // get-pages
+        'index' => 'product.category.index', // all categories
+        'show' => 'product.category.show',
+        'create' => 'product.category.create',
+        'edit' => 'product.category.edit',
+        // post-events
+        'store' => 'product.category.store',
+        'update' => 'product.category.update',
+        'destroy' => 'product.category.destroy',
+    ]);
 
 
 /**

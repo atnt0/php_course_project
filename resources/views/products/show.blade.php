@@ -66,6 +66,16 @@
                     </div>
 
                     <div class="row">
+                        <div class="col-2 text-right"><b>Category:</b></div>
+                        <div class="col-10">{{ $product->category_title_ru }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Price:</b></div>
+                        <div class="col-10">{{ $dataProduct['price_float'] }}</div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-2 text-right"><b>Created at:</b></div>
                         <div class="col-10">{{ $product->created_at }}</div>
                     </div>
