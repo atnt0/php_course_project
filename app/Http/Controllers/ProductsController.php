@@ -84,7 +84,7 @@ class ProductsController extends Controller
             'title_ru' => 'required|min:4',
             'description_ru' => 'required|min:10',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+//            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'quantity' => 'required|integer', // unsigned
         ]);
 
@@ -132,18 +132,20 @@ class ProductsController extends Controller
     public function show($uuid)
     {
         $product = Product::getProduct($uuid);
-
+//        dd($product);
 
         if( empty($product) )
             abort(404);
 
         $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+        $tax_float = round($product->tax / self::PRODUCT_MONEY_FIX_NUMBER, 2);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
         $dataProduct = [
             'price_float' => $price_float,
+//            'tax_float' => $tax_float,
             //TODO может перенести в user?
             'user_own' => [
                 'id' => $user_own->id,
@@ -176,7 +178,7 @@ class ProductsController extends Controller
 
         $dataProduct = [
             'price_float' => $price_float,
-            'tax_float' => $tax_float,
+//            'tax_float' => $tax_float,
             //TODO может перенести в user?
             'user_own' => [
                 'id' => $user_own->id,
@@ -201,7 +203,7 @@ class ProductsController extends Controller
             'title_ru' => 'required|min:4',
             'description_ru' => 'required|min:10',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+//            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'quantity' => 'required|integer',
         ]);
 
@@ -243,4 +245,7 @@ class ProductsController extends Controller
             ->route('product.index')
             ->with('success', 'Product deleted!');
     }
+
+    //TODO реализовать поиск
+
 }

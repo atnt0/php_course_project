@@ -30,14 +30,14 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <label for="description_ru">Description ru:</label>
-                        <textarea class="form-control" name="description_ru" rows="10">{{ $product->description_ru }}</textarea>
+                        <textarea class="form-control" name="description_ru" rows="6">{{ $product->description_ru }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-6">
                     <div class="form-group">
                         <label for="quantity">Quantity:</label>
-                        <input type="number" class="form-control" name="quantity" value="{{ $product->quantity }}"/>
+                        <input type="number" class="form-control text-right" name="quantity" value="{{ $product->quantity }}"/>
                     </div>
                 </div>
 
@@ -55,21 +55,23 @@
                     </div>
                 </div>
 
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="tax">Tax:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control text-right" aria-label="" name="tax" value="{{ $dataProduct['tax_float'] }}">
-                            <div class="input-group-append">
-                                <span class="input-group-text">₴</span>
-                                <span class="input-group-text">0.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+{{--                <div class="col-6">--}}
+{{--                    <div class="form-group">--}}
+{{--                        <label for="tax">Tax:</label>--}}
+{{--                        <div class="input-group">--}}
+{{--                            <input type="text" class="form-control text-right" aria-label="" name="tax" value="{{ $dataProduct['tax_float'] }}">--}}
+{{--                            <div class="input-group-append">--}}
+{{--                                <span class="input-group-text">₴</span>--}}
+{{--                                <span class="input-group-text">0.00</span>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <br>
 
-                <button type="submit" class="btn btn-primary">Update</button>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <button type="submit" class="btn btn-primary">Update
+                </div>
             </form>
         </div>
     </div>

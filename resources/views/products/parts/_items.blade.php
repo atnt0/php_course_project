@@ -1,4 +1,4 @@
-@foreach($products as $product)
+@foreach($products as $key => $product)
     <tr>
 {{--        <td>--}}
 {{--            {{ $product->id }}--}}
@@ -14,7 +14,10 @@
             {{ mb_strlen($product->description_ru) > 20 ? "..." : "" }}
         </td>
         <td>
-
+            {{ $dataProducts[$key]['price_float'] }}
+        </td>
+        <td>
+            {{ $product->category_title_ru }}
         </td>
         <td>
             <b>{{ $product->product_status_title_ru }}</b>

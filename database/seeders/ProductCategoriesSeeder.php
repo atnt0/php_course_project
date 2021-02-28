@@ -31,10 +31,10 @@ class ProductCategoriesSeeder extends Seeder
                 'parent_id' => 1,
                 'title' => '',
                 'title_ua' => '',
-                'title_ru' => 'Моя категория',
+                'title_ru' => 'Более выразительная категория',
                 'description' => '',
                 'description_ua' => '',
-                'description_ru' => 'Описание моей категории',
+                'description_ru' => 'Ну и соответственно описание к ней',
             ],
         ];
 

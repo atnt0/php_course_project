@@ -1,10 +1,9 @@
-{{--{{ dd([$products, $dataProducts]) }}--}}
 @extends('base')
 
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Products</h1>
+            <h1 class="display-3">Product Categories</h1>
 
             <div class="row">
                 @if ($errors->any())
@@ -24,38 +23,33 @@
                     {{--                    Only registred users can be use this function.--}}
                 @else
                     <div class="col">
-                        <a href="{{ route('product.create') }}" class="mb-3 btn btn-info text-white">Add product</a>
+                        <a href="{{ route('product.category.create') }}" class="mb-3 btn btn-primary">Add Category</a>
                     </div>
                 @endif
 
-                <div class="col">
-                    <div class="float-right">
-                        <form id="searchForm" name="searchForm" action="{{ route('product.search.ajax') }}" method="post">
-                            @csrf
-                            <input type="text" name="searchString" placeholder="name" />
-                            <button class="btn btn-info text-white" type="submit">Search</button>
-                        </form>
-                    </div>
-                </div>
+{{--                <div class="col">--}}
+{{--                    <div class="float-right">--}}
+{{--                        <form id="searchForm" name="searchForm" action="{{ route('product.category.search.ajax') }}" method="post">--}}
+{{--                            @csrf--}}
+{{--                            <input type="text" name="searchString" placeholder="sound name" />--}}
+{{--                            <button class="btn btn-primary" type="submit">Search</button>--}}
+{{--                        </form>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
-            <br>
 
 
             <table class="table table-striped" data-table="insert_here">
                 <thead>
                 <tr>
-{{--                    <th>Id</th>--}}
-                    <th>UUID</th>
+                    <th>Id</th>
                     <th>Title ru</th>
                     <th>Description ru</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Last Status</th>
-                    <th colspan="3">Links</th>
+                    <th colspan="3">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @include('products.parts._items')
+                    @include('productcategories.parts._items')
                 </tbody>
             </table>
 

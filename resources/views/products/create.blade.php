@@ -29,14 +29,14 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <label for="description_ru">Description ru:</label>
-                            <textarea class="form-control" name="description_ru" rows="10"></textarea>
+                            <textarea class="form-control" name="description_ru" rows="6"></textarea>
                         </div>
                     </div>
 
                     <div class="col-6">
                         <div class="form-group">
                             <label for="number">Quantity:</label>
-                            <input type="number" class="form-control" name="quantity" value="10"/>
+                            <input type="number" class="form-control text-right" name="quantity" value="10"/>
                         </div>
                     </div>
 
@@ -63,22 +63,22 @@
                         </div>
                     </div>
 
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="tax">Tax:</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control text-right" aria-label="" name="tax" value="0.00">
-                                <div class="input-group-append">
-                                    <span class="input-group-text">₴</span>
-                                    <span class="input-group-text">0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="col-6">--}}
+{{--                        <div class="form-group">--}}
+{{--                            <label for="tax">Tax:</label>--}}
+{{--                            <div class="input-group">--}}
+{{--                                <input type="text" class="form-control text-right" aria-label="" name="tax" value="0.00">--}}
+{{--                                <div class="input-group-append">--}}
+{{--                                    <span class="input-group-text">₴</span>--}}
+{{--                                    <span class="input-group-text">0.00</span>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                     <br>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <button type="submit" class="btn btn-primary">Add product</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
 
                 </form>
