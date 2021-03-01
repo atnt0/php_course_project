@@ -6,8 +6,15 @@
 
 require('./bootstrap');
 
+//-----------------------------------------------
+import $ from 'jquery';
+window.$ = window.jQuery = $;
 
-require('./scripts/register/captcha');
+import 'jquery-ui/ui/widgets/sortable.js';
+// here add as many widget as you may need
+//-----------------------------------------------
+
+require('./connectjs');
 
 
 window.Vue = require('vue').default;
@@ -34,3 +41,4 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+

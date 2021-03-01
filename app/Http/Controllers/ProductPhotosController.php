@@ -12,7 +12,7 @@ use Webpatser\Uuid\Uuid;
 
 class ProductPhotosController extends Controller
 {
-    const PRODUCT_PHOTO_PUBLIC_DIRECTORY = '/storage/productphotos'; // пусть к директории, от куда пользователи получают изображение
+    public const PRODUCT_PHOTO_PUBLIC_DIRECTORY = '/storage/productphotos'; // пусть к директории, от куда пользователи получают изображение
 
     /**
      * Display a listing of the resource.
@@ -23,6 +23,8 @@ class ProductPhotosController extends Controller
     {
         //$photos = ProductPhotos::all();
         $productPhotos = ProductPhotos::getProductPhotos();
+//        $productPhotos = ProductPhotos::all();
+//        dd($productPhotos);
 
         $dataProductPhotos = [[]];
 
@@ -30,6 +32,8 @@ class ProductPhotosController extends Controller
         {
             foreach ($productPhotos as $key => $productPhoto) {
                 $dataProductPhotos[$key] = [
+                    'uuid' => $productPhoto->uuid,
+                    'description_ru' => $productPhoto->description_ru,
                     'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
                 ];
             }
@@ -111,14 +115,23 @@ class ProductPhotosController extends Controller
      */
     public function edit($uuid)
     {
-        $photo = ProductPhotos::where('uuid', '=', $uuid)->firstOrFail();
+        $productPhoto = ProductPhotos::where('uuid', '=', $uuid)->firstOrFail();
 
-        if( empty($photo) )
+        if( empty($productPhoto) )
             abort(404);
+
+        $dataProductPhotos = [];
+
+        //TODO перенести в отдельный метод
+        $dataProductPhoto = [
+            'uuid' => $productPhoto->uuid,
+            'description_ru' => $productPhoto->description_ru,
+            'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+        ];
 
         $products = Product::all();
 
-        return view('productphotos.edit', compact('photo', 'products'));
+        return view('productphotos.edit', compact('productPhoto', 'products', 'dataProductPhoto'));
     }
 
     /**
@@ -169,4 +182,67 @@ class ProductPhotosController extends Controller
             ->route('product.photo.index')
             ->with('success', 'Product Photo deleted!');
     }
+
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     *
+     *
+     */
+    public function editPositionsForProductByUuid($product_uuid)
+    {
+        $product = Product::where('uuid', '=',  $product_uuid )->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->get();
+
+        if( empty($productPhotos) )
+            abort(404);
+
+        $dataProductPhotos = self::getPreDataForPhotos($productPhotos);
+
+        return view('productphotos.editPositionsForProduct',
+            compact('product', 'productPhotos', 'dataProductPhotos'));
+    }
+
+
+
+    /**
+     * Метод возвращает подготовленные к выводу на view данные по одному Фото
+     */
+    public static function getPreDataForPhoto(ProductPhotos $productPhoto)
+    {
+        return [
+            'uuid' => $productPhoto->uuid,
+            'description_ru' => $productPhoto->description_ru,
+            'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+        ];
+    }
+
+    /**
+     * Метод возвращает подготовленные к выводу на view данные по Массиву Фото
+     */
+    public static function getPreDataForPhotos( $productPhotos) //  ...
+    {
+        $dataProductPhotos = [];
+
+        if( count($productPhotos) > 0 )
+        {
+            foreach ($productPhotos as $key => $productPhoto) {
+                $dataProductPhotos[$key] = self::getPreDataForPhoto($productPhoto);
+            }
+        }
+
+        return $dataProductPhotos;
+    }
+
+
+
+
 }

@@ -21,7 +21,6 @@ class ProductsSeeder extends Seeder
                 'id' => 1,
                 'article_number' => '6549225',
                 'price' => 78200, // 78.20 грн - умножение на 10 тысяч
-                'tax' => 0, // 0.0 грн - умножение на 10 тысяч
                 'quantity' => 20,
                 'category_id' => 1,
                 'user_own_id' => 1,
@@ -35,6 +34,23 @@ class ProductsSeeder extends Seeder
                 'meta_keywords' => 'продукт номер один, №1, product number one, very good product',
                 'meta_description' => 'Такое же пустое описание но уже для роботов поисковиков.',
             ],
+            [
+                'id' => 2,
+                'article_number' => '5646567',
+                'price' => 145000, // 78.20 грн - умножение на 10 тысяч
+                'quantity' => 14,
+                'category_id' => 1,
+                'user_own_id' => 1,
+                'uuid' => '57e72b99-19fe-49f3-8c78-aa65a5297541', //
+                'title' => '',
+                'title_ua' => '',
+                'title_ru' => 'Товар 19',
+                'description' => '',
+                'description_ua' => '',
+                'description_ru' => 'Немного об этом замечательном товаре писать не будем, есть куча других вещей по проекту.',
+                'meta_keywords' => 'слова, слово, словосочетание',
+                'meta_description' => 'Товар вроде как и не продукт, но продукт, так как продует есть товар.',
+            ],
         ];
 
         if( count($arrayProducts) > 0 ){
@@ -47,7 +63,8 @@ class ProductsSeeder extends Seeder
                     $productNew['id'] = $product['id'];
                     $productNew['article_number'] = $product['article_number'];
                     $productNew['price'] = $product['price'];
-                    $productNew['tax'] = $product['tax'];
+                    if( !empty($product['tax']) && $product['tax'] != 0 )
+                        $productNew['tax'] = $product['tax'];
                     $productNew['quantity'] = $product['quantity'];
                     $productNew['category_id'] = $product['category_id'];
                     $productNew['user_own_id'] = $product['user_own_id'];

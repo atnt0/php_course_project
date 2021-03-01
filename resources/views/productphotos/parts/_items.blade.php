@@ -1,8 +1,5 @@
 @foreach($productPhotos as $key => $productPhoto)
-    <tr>
-        <td>
-            {{ $productPhoto->uuid }}
-        </td>
+    <tr data-product-id="{{ $productPhoto->uuid }}">
         <td>
             {{ $productPhoto->index }}
         </td>
@@ -17,7 +14,7 @@
 
         </td>
         <td>
-            <a href="{{ route('product.photo.edit', $productPhoto->uuid) }}" class="btn btn-primary">Edit</a>
+            <a href="{{ route('product.photo.edit', [$productPhoto->uuid]) }}" class="btn btn-primary">Edit</a>
 
             <div class="buttons-item d-inline-block">
                 <form action="{{ route('product.photo.destroy', [$productPhoto->uuid]) }}" method="post">
@@ -28,7 +25,8 @@
             </div>
         </td>
         <td>
-            <a href="{{ route('product.show', $productPhoto->product_uuid) }}" class="btn btn-primary"
+{{--            {{ dd($productPhoto) }}--}}
+            <a href="{{ route('product.show', [$productPhoto->product_uuid]) }}" class="btn btn-primary"
                title="This photo attached for product">View_Product</a>
         </td>
     </tr>

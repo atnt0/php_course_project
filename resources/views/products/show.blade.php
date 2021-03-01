@@ -3,7 +3,7 @@
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Product</h1>
+            <h1 class="display-3">Show a Product</h1>
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -72,17 +72,38 @@
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Price:</b></div>
-                        <div class="col-10">{{ $dataProduct['price_float'] }}</div>
+                        <div class="col-10"><b>{{ $dataProduct['price_float'] }}</b></div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-2 text-right"><b>Created at:</b></div>
-                        <div class="col-10">{{ $product->created_at }}</div>
-                    </div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-2 text-right"><b>Created at:</b></div>--}}
+{{--                        <div class="col-10">{{ $product->created_at }}</div>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="row">--}}
+{{--                        <div class="col-2 text-right"><b>Updated at:</b></div>--}}
+{{--                        <div class="col-10">{{ $product->updated_at }}</div>--}}
+{{--                    </div>--}}
 
                     <div class="row">
-                        <div class="col-2 text-right"><b>Updated at:</b></div>
-                        <div class="col-10">{{ $product->updated_at }}</div>
+                        <div class="col-2 text-right"><b>Photos:</b></div>
+                        <div class="col-10">
+                            <ul style="list-style: none; padding: 0;">
+                            @foreach($dataProduct['productPhotos'] as $productPhoto)
+                                <li style=" display: inline-block; padding: 5px 20px; border: 1px solid #ccc;">
+                                    <a href="{{ $productPhoto['link'] }}" target="_blank">
+                                        <img src="{{ $productPhoto['link'] }}" title="{{ $productPhoto['description_ru'] }}"
+                                             style="width: 100px; height: auto; max-height: 100px;">
+                                    </a>
+
+                                    <a href="{{ route('product.photo.edit', $productPhoto['uuid']) }}"
+                                       class="btn btn-sm btn-primary">Edit</a>
+                                </li>
+                            @endforeach
+                            </ul>
+                            <a href="{{ route('product.photo.editPositionsForProduct', ['product_uuid' => $product->uuid]) }}"
+                               class="btn btn-primary">Edit positions photos</a>
+                        </div>
                     </div>
 
                 </div>

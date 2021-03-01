@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductPhotos;
 use App\Models\StatusProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -42,10 +43,19 @@ class ProductsController extends Controller
                 $user_own = User::find($product->user_own_id);
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
-
+//                $productPhoto = ProductPhotos::getProductPhotoByProductId($product->id)->first();
+                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)->first();
+//                dd($productPhoto->uuid);
+                //TODO перенести в отдельный метод
+                $dataProductPhoto = [
+                    'uuid' => $productPhoto->uuid,
+                    'description_ru' => $productPhoto->description_ru,
+                    'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+                ];
 
                 $dataProducts[$key] = [
                     'price_float' => $price_float,
+                    'photo_main' => $dataProductPhoto,
                     //TODO может перенести в user?
                     'user_own' => [
                         'id' => $user_own->id,
@@ -138,14 +148,33 @@ class ProductsController extends Controller
         if( empty($product) )
             abort(404);
 
+        $productPhotos = ProductPhotos::getProductPhotoByProductId($product->id); // + product_uuid
+//        dd($productPhotos);
+//        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->get();
+
         $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
         $tax_float = round($product->tax / self::PRODUCT_MONEY_FIX_NUMBER, 2);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
+        $dataProductPhotos = [];
+
+        //TODO перенести в отдельный метод
+        if( count($productPhotos) > 0 )
+        {
+            foreach ($productPhotos as $key => $productPhoto) {
+                $dataProductPhotos[$key] = [
+                    'uuid' => $productPhoto->uuid,
+                    'description_ru' => $productPhoto->description_ru,
+                    'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+                ];
+            }
+        }
+
         $dataProduct = [
             'price_float' => $price_float,
+            'productPhotos' => $dataProductPhotos,
 //            'tax_float' => $tax_float,
             //TODO может перенести в user?
             'user_own' => [

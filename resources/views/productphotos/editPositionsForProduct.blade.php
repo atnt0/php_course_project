@@ -3,7 +3,7 @@
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Product Photos</h1>
+            <h1 class="display-3">Edit Positions Photos for Product</h1>
 
             <div class="row">
                 @if ($errors->any())
@@ -30,8 +30,7 @@
             </div>
             <br>
 
-
-            <table class="table table-striped" data-table="insert_here">
+            <table class="table table-striped" data-table="sortable">
                 <thead>
                 <tr>
                     {{--                    <th>Id</th>--}}
@@ -39,11 +38,10 @@
                     <th>Index</th>
                     <th>File name</th>
                     <th>Description ru</th>
-                    <th colspan="3">Links</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @include('productphotos.parts._items')
+                    @include('productphotos.parts._editItems')
                 </tbody>
             </table>
 

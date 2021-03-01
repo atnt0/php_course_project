@@ -19,9 +19,9 @@ class CreateProductsTable extends Migration
 
                 $table->string('article_number');
 
-                $table->bigInteger('price')->unsigned(); //TODO не забыть про умножение на 10 тысяч!!!
-                $table->bigInteger('tax')->unsigned(); // та же история про 10 тысяч!
-                $table->bigInteger('quantity')->unsigned(); // ->nullable() // _in_stock // количество на складе
+                $table->bigInteger('price')->unsigned()->default(0); //TODO не забыть про умножение на 10 тысяч!!!
+                $table->bigInteger('tax')->unsigned()->default(0); // та же история про 10 тысяч!
+                $table->bigInteger('quantity')->unsigned()->default(0); // ->nullable() // _in_stock // количество на складе
 
                 $table->unsignedBigInteger('category_id');
 

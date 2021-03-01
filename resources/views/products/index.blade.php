@@ -39,24 +39,9 @@
             </div>
             <br>
 
-
-            <table class="table table-striped" data-table="insert_here">
-                <thead>
-                <tr>
-{{--                    <th>Id</th>--}}
-                    <th>UUID</th>
-                    <th>Title ru</th>
-                    <th>Description ru</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Last Status</th>
-                    <th colspan="3">Links</th>
-                </tr>
-                </thead>
-                <tbody>
-                    @include('products.parts._items')
-                </tbody>
-            </table>
+            <div class="row">
+                @include('products.parts._items')
+            </div>
 
         </div>
     </div>

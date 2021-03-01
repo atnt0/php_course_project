@@ -16,9 +16,16 @@
                 <br />
             @endif
 
-            <form method="post" action="{{ route('product.photo.update', $photo->uuid) }}">
+            <form method="post" action="{{ route('product.photo.update', $productPhoto->uuid) }}">
                 @method('PATCH')
                 @csrf
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div>
+                        <img src="{{  $dataProductPhoto['link'] }}" style="width: 300px; height: auto; max-height: 300px;">
+                    </div>
+                </div>
+                <br>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
@@ -34,7 +41,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <label for="description_ru">Description ru:</label>
-                        <textarea class="form-control" name="description_ru" rows="6">{{ $photo->description_ru }}</textarea>
+                        <textarea class="form-control" name="description_ru" rows="6">{{ $productPhoto->description_ru }}</textarea>
                     </div>
                 </div>
                 <br>

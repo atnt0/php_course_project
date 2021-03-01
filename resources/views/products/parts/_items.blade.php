@@ -1,32 +1,33 @@
 @foreach($products as $key => $product)
-    <tr>
+
+    <div class="col-sm-3">
 {{--        <td>--}}
 {{--            {{ $product->id }}--}}
 {{--        </td>--}}
-        <td>
-            {{ $product->uuid }}
-        </td>
-        <td>
+        <div>
+            <img src="{{  $dataProducts[$key]['photo_main']['link'] }}" style="width: 100%;">
+        </div>
+{{--        <div>--}}
+{{--            {{ $product->uuid }}--}}
+{{--        </div>--}}
+        <div>
             {{ $product->title_ru }}
-        </td>
-        <td>
+        </div>
+        <div>
             {{ mb_substr($product->description_ru, 0, 20) }}
             {{ mb_strlen($product->description_ru) > 20 ? "..." : "" }}
-        </td>
-        <td>
+        </div>
+        <div>
             {{ $dataProducts[$key]['price_float'] }}
-        </td>
-        <td>
+        </div>
+        <div>
             {{ $product->category_title_ru }}
-        </td>
-        <td>
+        </div>
+        <div>
             <b>{{ $product->product_status_title_ru }}</b>
-        </td>
-        <td>
+        </div>
+        <div>
             <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View</a>
-        </td>
-        <td>
-
-        </td>
-    </tr>
+        </div>
+    </div>
 @endforeach
