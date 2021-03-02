@@ -1982,38 +1982,43 @@ __webpack_require__(/*! ./scripts/product/photo/editPositionsForProduct/sortable
   \********************************************************************************/
 /***/ (() => {
 
-var matchQueryLocation = '/product/photo/editPositionsForProduct';
+var matchQueryLocation = '/product/photo/editList';
 
 if (window.location.pathname.substr(0, matchQueryLocation.length) == matchQueryLocation) {
-  console.log('this is sortable for edit positions photos');
   $(document).ready(function () {
-    var sortable = $('[data-table="sortable"] > tbody');
-    console.log('sortable: ', sortable);
-    sortable.sortable({
-      handle: '.icon-move',
-      onDragStart: function onDragStart($item, container, _super) {
-        // Duplicate items of the no drop area
-        if (!container.options.drop) $item.clone().insertAfter($item);
+    $('[data-table="sortable"]').sortable({
+      items: "[data-product-id]",
+      handle: '.cont_item',
+      // revert: true,
+      cursor: 'grabbing',
+      // grab
+      tolerance: "pointer",
+      update: function update() {
+        var container = $(this);
+        var action = container.attr('data-action');
 
-        _super($item, container);
-      },
-      stop: function stop(event, ui) {
-        var parameters = sortable.sortable('toArray');
-        console.log('parameters: ', parameters);
-        return; // $.post("studentPosition.php",{value:parameters},function(result){
-        //     alert(result);
-        // });
+        var _token = container.find('input[name="_token"]').val();
+
+        var formData = new FormData();
+        formData.append('_token', _token);
+        var postData2 = container.sortable('toArray', {
+          attribute: 'data-product-id'
+        });
+        $.each(postData2, function (index, item) {
+          formData.append('photos[' + index + ']', item);
+        });
+        $.ajax({
+          type: 'POST',
+          url: action,
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function success(data) {// console.log('return data: ', data);
+          }
+        });
       }
     });
-  }); // $(document).ready(function () {
-  //
-  //     // $('div').css({'background-color': 'red'});
-  //     $('.sortable').sortable({ cursor: 'move', axis: 'y', update: function () {
-  //             var order = $(this).sortable('toArray');
-  //             $.post('{{ URL::route('Sliders::sort') }}', { order: order })
-  //         }
-  //     });
-  // });
+  });
 }
 
 /***/ }),

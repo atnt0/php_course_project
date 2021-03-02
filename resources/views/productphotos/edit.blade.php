@@ -16,6 +16,14 @@
                 <br />
             @endif
 
+            <div class="row">
+                <div class="col">
+                    <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
+                       class="btn btn-primary">Back to Edit photos</a>
+                    <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View_Product</a>
+                </div>
+            </div>
+
             <form method="post" action="{{ route('product.photo.update', $productPhoto->uuid) }}">
                 @method('PATCH')
                 @csrf
@@ -29,11 +37,11 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <label for="description_ru">For Product ru:</label>
-                        <select class="form-control" name="product_uuid" id="product_uuid">
-                            @foreach($products as $product)
+                        <label for="description_ru">For Product:</label>
+                        <select class="form-control" name="product_uuid" id="product_uuid" disabled>
+{{--                            @foreach($products as $product)--}}
                                 <option value="{{ $product->uuid }}">{{ $product->title_ru }}</option>
-                            @endforeach
+{{--                            @endforeach--}}
                         </select>
                     </div>
                 </div>

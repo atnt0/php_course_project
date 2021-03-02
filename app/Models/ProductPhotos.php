@@ -134,6 +134,7 @@ class ProductPhotos extends Model
                 'pp.description_ua as description_ua',
                 'pp.description_ru as description_ru',
             )
+            ->orderBy('index', 'asc')
             ->get();
 
         return $complaints;

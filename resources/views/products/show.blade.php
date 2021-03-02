@@ -95,14 +95,9 @@
                                         <img src="{{ $productPhoto['link'] }}" title="{{ $productPhoto['description_ru'] }}"
                                              style="width: 100px; height: auto; max-height: 100px;">
                                     </a>
-
-                                    <a href="{{ route('product.photo.edit', $productPhoto['uuid']) }}"
-                                       class="btn btn-sm btn-primary">Edit</a>
                                 </li>
                             @endforeach
                             </ul>
-                            <a href="{{ route('product.photo.editPositionsForProduct', ['product_uuid' => $product->uuid]) }}"
-                               class="btn btn-primary">Edit positions photos</a>
                         </div>
                     </div>
 
@@ -116,6 +111,10 @@
                     <h4 class="display-6">Actions:</h4>
 
                     <div class="buttons">
+                            <div class="buttons-item d-inline-block">
+                                <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
+                                   class="btn btn-primary">Edit photos</a>
+                            </div>
 
                             <div class="buttons-item d-inline-block">
                                 <a href="{{ route('product.edit', [$product->uuid]) }}" class="btn btn-primary">Edit</a>

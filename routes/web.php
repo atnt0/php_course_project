@@ -41,18 +41,22 @@ Auth::routes();
  * ВНИМАНИЕ Фотографии сейчас реализованы в классическом виде - отдельной загрузкой, но
  * в дальнейшем основные действия - загрузка, обновление и удаление будут перенесены на их ajax-версии
  */
-Route::get('/product/photo/editPositionsForProduct/{product_uuid}', [ProductPhotosController::class, 'editPositionsForProductByUuid'])
-    ->name('product.photo.editPositionsForProduct');
+Route::get('/product/photo/editListForProduct/{product_uuid}', [ProductPhotosController::class, 'editPositionsForProductByUuid'])
+    ->name('product.photo.editListForProduct');
+Route::post('/product/photo/editListForProduct/{product_uuid}/set_photosPositions', [ProductPhotosController::class, 'setProductPhotosPositions'])
+    ->name('product.photo.editListForProduct.setProductPhotosPositions');
+Route::get('/product/photo/createForProduct/{product_uuid}', [ProductPhotosController::class, 'createForProduct'])
+    ->name('product.photo.createForProduct');
 Route::resource('/product/photo', ProductPhotosController::class)
     // ->only([ 'index', 'show' ])
     //->except([ 'create', 'edit', 'update' ])
     // исключить
-    ->except([ 'show' ])
+    ->except([ 'show', 'create' ])
     ->names([
         // get-pages
         'index' => 'product.photo.index', // all categories
         //'show' => 'product.photo.show',
-        'create' => 'product.photo.create',
+        //'create' => 'product.photo.create',
         'edit' => 'product.photo.edit',
         // post-events
         'store' => 'product.photo.store',

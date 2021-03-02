@@ -12,7 +12,8 @@ use Webpatser\Uuid\Uuid;
 
 class ProductPhotosController extends Controller
 {
-    public const PRODUCT_PHOTO_PUBLIC_DIRECTORY = '/storage/productphotos'; // пусть к директории, от куда пользователи получают изображение
+    public const PRODUCT_PHOTO_PUBLIC_DIRECTORY = '/storage/productphotos'; // публичный путь к директории, от куда пользователи получают изображение
+    public const PRODUCT_PHOTO_SERVER_DIRECTORY = '/public/productphotos'; // серверный путь к директории, куда сохраняются фотографии
 
     /**
      * Display a listing of the resource.
@@ -60,7 +61,7 @@ class ProductPhotosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) // , $product_uuid
     {
         $request->validate([
 //            'product_uuid' => 'required|regex:/^[a-f0-9]{8}\-[a-f0-9]{4}\-4[a-f0-9]{3}\-(8|9|a|b)[a-f0-9]{3}\-[a-f0-9]{12}?$/',
@@ -84,9 +85,11 @@ class ProductPhotosController extends Controller
 //        $file->getClientMimeType();
         $fileName = Uuid::generate()->string .'.'. $file->guessClientExtension();
 
-        $newFilePath = Storage::putFileAs(self::PRODUCT_PHOTO_PUBLIC_DIRECTORY, new File($file->getPathname()), $fileName); // new File($file->getPathname())
+        $newFilePath = Storage::putFileAs( self::PRODUCT_PHOTO_SERVER_DIRECTORY, new File($file->getPathname()), $fileName); // new File($file->getPathname())
 
-        $userId = Auth::user() ? Auth::user()->id : -1;
+
+        $userId = Auth::user() ? Auth::user()->id : 0; // -1
+//        dd(['$userId'=>$userId]);
 
         $uuid = Uuid::generate()->string;
 
@@ -103,7 +106,7 @@ class ProductPhotosController extends Controller
         $productPhoto->save();
 
         return redirect()
-            ->route('product.photo.index', [])
+            ->route('product.photo.editListForProduct', ['product_uuid' => $product->uuid])
             ->with('success', 'Product Photo saved!');
     }
 
@@ -120,6 +123,8 @@ class ProductPhotosController extends Controller
         if( empty($productPhoto) )
             abort(404);
 
+        $product = Product::where('id', '=',  $productPhoto->product_id )->firstOrFail();
+
         $dataProductPhotos = [];
 
         //TODO перенести в отдельный метод
@@ -129,9 +134,9 @@ class ProductPhotosController extends Controller
             'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
         ];
 
-        $products = Product::all();
+        //$products = Product::all();
 
-        return view('productphotos.edit', compact('productPhoto', 'products', 'dataProductPhoto'));
+        return view('productphotos.edit', compact('productPhoto', 'dataProductPhoto', 'product'));
     }
 
     /**
@@ -176,10 +181,16 @@ class ProductPhotosController extends Controller
         if( empty($productPhoto) )
             abort(404);
 
+        $product = Product::where('id', '=',  $productPhoto->product_id )->firstOrFail();
+
+        $filePath = self::PRODUCT_PHOTO_SERVER_DIRECTORY .'/'. $productPhoto->file_name;
+
         $productPhoto->delete();
 
+        Storage::delete($filePath);
+
         return redirect()
-            ->route('product.photo.index')
+            ->route('product.photo.editListForProduct', ['product_uuid' => $product->uuid])
             ->with('success', 'Product Photo deleted!');
     }
 
@@ -200,16 +211,64 @@ class ProductPhotosController extends Controller
         if( empty($product) )
             abort(404);
 
-        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->get();
+        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)
+            ->orderBy('index', 'asc')->get();
 
         if( empty($productPhotos) )
             abort(404);
 
         $dataProductPhotos = self::getPreDataForPhotos($productPhotos);
 
-        return view('productphotos.editPositionsForProduct',
+        return view('productphotos.editListForProduct',
             compact('product', 'productPhotos', 'dataProductPhotos'));
     }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createForProduct($product_uuid)
+    {
+        $product = Product::where('uuid', '=',  $product_uuid )->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+        return view('productphotos.createForProduct', compact('product'));
+    }
+
+
+
+
+    /**
+     * Метод устанавливает новый порядок в списке фотографий продукта
+     */
+    public static function setProductPhotosPositions(Request $request, $product_uuid)
+    {
+
+        $uuidPhotos = $request->get('photos');
+
+//        dd([
+//            'product_uuid' => $product_uuid,
+//            'photos' => $uuidPhotos,
+//        ]);
+
+        if( count($uuidPhotos) > 0 )
+        {
+            $arr = [];
+            foreach ($uuidPhotos as $index => $uuidPhoto) {
+                ProductPhotos::where('uuid', '=', $uuidPhoto)->update(['index' => $index]);
+            }
+        }
+
+//        return 1;
+    }
+
+
+
+
 
 
 
@@ -241,6 +300,7 @@ class ProductPhotosController extends Controller
 
         return $dataProductPhotos;
     }
+
 
 
 

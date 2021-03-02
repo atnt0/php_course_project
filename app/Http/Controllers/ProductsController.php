@@ -44,7 +44,7 @@ class ProductsController extends Controller
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
 //                $productPhoto = ProductPhotos::getProductPhotoByProductId($product->id)->first();
-                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)->first();
+                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)->orderBy('index', 'asc')->first();
 //                dd($productPhoto->uuid);
                 //TODO перенести в отдельный метод
                 $dataProductPhoto = [
