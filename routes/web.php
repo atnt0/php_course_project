@@ -42,11 +42,11 @@ Auth::routes();
 Route::get('/order/createFakeOrder', [OrdersController::class, 'createFakeOrder'])
     ->name('order.createFakeOrder');
 Route::resource('/order', OrdersController::class)
-    ->except([ 'show', 'create', 'edit' ])
+    ->except([ 'create', 'edit' ])
     ->names([
         // get-pages
-        //'index' => 'order.index', // all products
-        //'show' => 'order.show',
+        'index' => 'order.index', // all orders
+        'show' => 'order.show',
         //'create' => 'order.create',
         //'edit' => 'order.edit',
         // post-events

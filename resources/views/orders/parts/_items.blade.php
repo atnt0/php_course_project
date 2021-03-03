@@ -35,5 +35,8 @@
             {{ $order->guest_ip }}<br>
             {{ $order->guest_useragent }}
         </td>
+        <td>
+            <a href="{{ route('order.show', [$order->uuid]) }}" class="btn btn-primary">View</a>
+        </td>
     </tr>
 @endforeach

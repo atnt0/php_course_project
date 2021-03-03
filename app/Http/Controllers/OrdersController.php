@@ -42,16 +42,20 @@ class OrdersController extends Controller
         //
     }
 
-//    /**
-//     * Display the specified resource.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function show($id)
-//    {
-//        //
-//    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $uuid
+     * @return \Illuminate\Http\Response
+     */
+    public function show($uuid)
+    {
+        $order = Order::where('uuid', '=', $uuid)->firstOrFail(); //->get();
+
+
+
+        return view('orders.show', compact('order', ));
+    }
 
 //    /**
 //     * Show the form for editing the specified resource.
