@@ -14,18 +14,18 @@
 
         </td>
         <td>
-{{--            <a href="{{ route('product.photo.edit', [$productPhoto->uuid]) }}" class="btn btn-primary">Edit</a>--}}
+            {{--            <a href="{{ route('product.photo.edit', [$productPhoto->uuid]) }}" class="btn btn-primary">Edit</a>--}}
 
-{{--            <div class="buttons-item d-inline-block">--}}
-{{--                <form action="{{ route('product.photo.destroy', [$productPhoto->uuid]) }}" method="post">--}}
-{{--                    @csrf--}}
-{{--                    @method('DELETE')--}}
-{{--                    <button class="btn btn-danger" type="submit">Delete</button>--}}
-{{--                </form>--}}
-{{--            </div>--}}
+            {{--            <div class="buttons-item d-inline-block">--}}
+            {{--                <form action="{{ route('product.photo.destroy', [$productPhoto->uuid]) }}" method="post">--}}
+            {{--                    @csrf--}}
+            {{--                    @method('DELETE')--}}
+            {{--                    <button class="btn btn-danger" type="submit">Delete</button>--}}
+            {{--                </form>--}}
+            {{--            </div>--}}
         </td>
         <td>
-{{--            {{ dd($productPhoto) }}--}}
+            {{--            {{ dd($productPhoto) }}--}}
             <a href="{{ route('product.show', [$productPhoto->product_uuid]) }}" class="btn btn-primary"
                title="This photo attached for product">View_Product</a>
         </td>

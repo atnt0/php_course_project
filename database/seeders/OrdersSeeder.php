@@ -19,12 +19,16 @@ class OrdersSeeder extends Seeder
             [
                 'id' => 1,
                 'user_own_id' => 1,
+                'uuid' => '78c9db80-b18d-4aae-8355-dd301224a39f',
+
                 'client_first_name' => 'Адреан',
                 'client_last_name' => 'Мельников',
                 'client_patronymic_name' => 'Осипович',
+
                 'comment' => 'Очень нужно, отправьте быстрее, пожалуйста!',
                 'email' => 'adrean@fake.com',
                 'phone' => '+380501234567',
+
                 'address_city' => 'Углегорск',
                 'address_zip' => '86481',
                 'address_street' => 'ул. Горняка',
@@ -32,6 +36,7 @@ class OrdersSeeder extends Seeder
                 'address_floor' => '',
                 'address_apart' => '63',
                 'address_np_number' => '',
+
                 'guest_ip' => '127.0.0.1',
                 'guest_useragent' => 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/5360 (KHTML, like Gecko) Chrome/39.0.889.0 Mobile Safari/5360',
             ],
@@ -47,6 +52,7 @@ class OrdersSeeder extends Seeder
 
                     $orderNew['id'] = $order['id'];
                     $orderNew['user_own_id'] = $order['user_own_id'];
+                    $orderNew['uuid'] = $order['uuid'];
                     $orderNew['client_first_name'] = $order['client_first_name'];
                     $orderNew['client_last_name'] = $order['client_last_name'];
                     $orderNew['client_patronymic_name'] = $order['client_patronymic_name'];

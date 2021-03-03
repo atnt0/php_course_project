@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoriesController;
 use \App\Http\Controllers\ProductPhotosController;
+use \App\Http\Controllers\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,26 @@ Route::get('/', function () {
 Route::get('/register/captcha-refresh', [RegisterController::class, 'refreshCaptcha'])->name('refreshCaptcha');
 Auth::routes();
 
+
+/**
+ * Section routes: Заказы сформированные
+ *
+ */
+Route::get('/order/createFakeOrder', [OrdersController::class, 'createFakeOrder'])
+    ->name('order.createFakeOrder');
+Route::resource('/order', OrdersController::class)
+    ->except([ 'show', 'create', 'edit' ])
+    ->names([
+        // get-pages
+        //'index' => 'order.index', // all products
+        //'show' => 'order.show',
+        //'create' => 'order.create',
+        //'edit' => 'order.edit',
+        // post-events
+        'store' => 'order.store',
+        'update' => 'order.update',
+        'destroy' => 'order.destroy',
+    ]);
 
 
 /**

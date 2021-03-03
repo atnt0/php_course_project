@@ -19,6 +19,9 @@ class CreateOrdersTable extends Migration
 
                 $table->integer('user_own_id')->unsigned()->nullable();
 
+                $table->string('uuid', 36)->unique()->nullable(false);
+//                $table->string('slug', 255)->nullable(false);
+
                 $table->string('comment', 255)->nullable()->default(''); // customer_comment
                 $table->string('email', 255)->nullable()->default(''); // customer_email
                 $table->string('phone', 20)->nullable()->default(''); // customer_phone
