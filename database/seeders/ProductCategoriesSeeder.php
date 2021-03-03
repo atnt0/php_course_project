@@ -19,6 +19,7 @@ class ProductCategoriesSeeder extends Seeder
             [
                 'id' => 1,
                 'parent_id' => 0,
+                'slug' => 'moya_kategoriya',
                 'title' => '',
                 'title_ua' => '',
                 'title_ru' => 'Моя категория',
@@ -29,6 +30,7 @@ class ProductCategoriesSeeder extends Seeder
             [
                 'id' => 2,
                 'parent_id' => 1,
+                'slug' => 'moya-vtoraya-kategoriya',
                 'title' => '',
                 'title_ua' => '',
                 'title_ru' => 'Моя вторая категория',
@@ -50,6 +52,8 @@ class ProductCategoriesSeeder extends Seeder
 
                     if( $category['parent_id'] != null && $category['parent_id'] > 0 )
                         $categoryNew['parent_id'] = $category['parent_id'];
+
+                    $categoryNew['slug'] = $category['slug'];
 
                     $categoryNew['title'] = $category['title'];
                     $categoryNew['title_ua'] = $category['title_ua'];

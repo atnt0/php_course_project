@@ -18,6 +18,9 @@ class CreateProductCategoriesTable extends Migration
                 $table->id();
 
                 $table->bigInteger('parent_id')->unsigned()->nullable(); // parent category id
+
+                $table->string('slug', 255)->nullable(false);
+
                 $table->string('title', 255)->nullable()->default('');
                 $table->string('title_ua', 255)->nullable()->default('');
                 $table->string('title_ru', 255)->nullable()->default('');

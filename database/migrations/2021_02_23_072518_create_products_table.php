@@ -27,14 +27,15 @@ class CreateProductsTable extends Migration
 
                 $table->bigInteger('user_own_id')->unsigned();
 
-                $table->string('uuid', 36)->unique();
+                $table->string('uuid', 36)->unique()->nullable(false);
+                $table->string('slug', 255)->nullable(false);
 
-                $table->string('title', 255)->nullable()->default('');
-                $table->string('title_ua', 255)->nullable()->default('');
-                $table->string('title_ru', 255)->nullable()->default('');
-                $table->string('description')->nullable()->default('');
-                $table->string('description_ua')->nullable()->default('');
-                $table->string('description_ru')->nullable()->default('');
+                $table->string('title', 255)->default('');
+                $table->string('title_ua', 255)->default('');
+                $table->string('title_ru', 255)->default('');
+                $table->longText('description')->default('');
+                $table->longText('description_ua')->default('');
+                $table->longText('description_ru')->default('');
 
                 $table->string('meta_keywords', 255)->default('');
                 $table->string('meta_description', 255)->default('');

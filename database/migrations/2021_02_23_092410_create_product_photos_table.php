@@ -26,9 +26,9 @@ class CreateProductPhotosTable extends Migration
 
             $table->bigInteger('user_own_id')->unsigned();
 
-            $table->string('description', 255)->nullable()->default('');
-            $table->string('description_ua', 255)->nullable()->default('');
-            $table->string('description_ru', 255)->nullable()->default('');
+            $table->string('description', 255)->default('');
+            $table->string('description_ua', 255)->default('');
+            $table->string('description_ru', 255)->default('');
 
             $table->foreign('product_id')->references('id')->on('products');
 

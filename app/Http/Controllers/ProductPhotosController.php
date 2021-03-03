@@ -93,6 +93,17 @@ class ProductPhotosController extends Controller
 
         $uuid = Uuid::generate()->string;
 
+        $dirt_description_ru = $request->get('description_ru');
+
+        $description_ru = !empty($dirt_description_ru) && $dirt_description_ru != null ? $request->get('description_ru') : '';
+
+
+//        dd([
+//            'all' => $request->toArray(),
+//            '$dirt_description_ru' => $dirt_description_ru,
+//            '$description_ru' => $description_ru,
+//        ]);
+
         $productPhoto = new ProductPhotos([
             'uuid' => $uuid,
             'product_id' => $product->id, // simple id
@@ -101,7 +112,7 @@ class ProductPhotosController extends Controller
             'user_own_id' => $userId,
             'description' => '',
             'description_ua' => '',
-            'description_ru' => $request->get('description_ru'),
+            'description_ru' => $description_ru,
         ]);
         $productPhoto->save();
 

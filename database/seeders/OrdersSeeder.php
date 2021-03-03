@@ -19,6 +19,9 @@ class OrdersSeeder extends Seeder
             [
                 'id' => 1,
                 'user_own_id' => 1,
+                'client_first_name' => 'Адреан',
+                'client_last_name' => 'Мельников',
+                'client_patronymic_name' => 'Осипович',
                 'comment' => 'Очень нужно, отправьте быстрее, пожалуйста!',
                 'email' => 'adrean@fake.com',
                 'phone' => '+380501234567',
@@ -36,15 +39,31 @@ class OrdersSeeder extends Seeder
 
         if( count($arrayOrders) > 0 ) {
             foreach ($arrayOrders as $order) {
-                $orderFound = DB::table('products')
+                $orderFound = DB::table('orders')
                     ->where('id', '=', $order['id'])->first();
 
                 if( !$orderFound ) {
                     $orderNew = new Order();
 
                     $orderNew['id'] = $order['id'];
-                    $orderNew['id'] = $order['id'];
-                    $orderNew['id'] = $order['id'];
+                    $orderNew['user_own_id'] = $order['user_own_id'];
+                    $orderNew['client_first_name'] = $order['client_first_name'];
+                    $orderNew['client_last_name'] = $order['client_last_name'];
+                    $orderNew['client_patronymic_name'] = $order['client_patronymic_name'];
+                    $orderNew['comment'] = $order['comment'];
+                    $orderNew['email'] = $order['email'];
+                    $orderNew['phone'] = $order['phone'];
+                    $orderNew['address_city'] = $order['address_city'];
+                    $orderNew['address_zip'] = $order['address_zip'];
+                    $orderNew['address_street'] = $order['address_street'];
+                    $orderNew['address_house'] = $order['address_house'];
+                    $orderNew['address_floor'] = $order['address_floor'];
+                    $orderNew['address_apart'] = $order['address_apart'];
+                    $orderNew['address_np_number'] = $order['address_np_number'];
+                    $orderNew['guest_ip'] = $order['guest_ip'];
+                    $orderNew['guest_useragent'] = $order['guest_useragent'];
+
+                    $orderNew->save();
                 }
             }
         }

@@ -21,6 +21,14 @@ class StatusProductSeeder extends Seeder
                 'product_id' => 1,
                 'status_id' => 1,
             ],
+            [
+                'product_id' => 2,
+                'status_id' => 3,
+            ],
+            [
+                'product_id' => 5,
+                'status_id' => 5,
+            ],
         ];
 
         if( count($arrayStatusProducts) > 0 ) {

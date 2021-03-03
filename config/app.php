@@ -175,9 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        /* add captcha */
+        /* added */
         Mews\Captcha\CaptchaServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        That0n3guy\Transliteration\TransliterationServiceProvider::class,
     ],
 
     /*
@@ -230,8 +231,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // added
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Transliteration' => \That0n3guy\Transliteration\Facades\Transliteration::class,
 
     ],
 

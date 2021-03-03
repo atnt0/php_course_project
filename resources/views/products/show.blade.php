@@ -72,7 +72,12 @@
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Price:</b></div>
-                        <div class="col-10"><b>{{ $dataProduct['price_float'] }}</b></div>
+                        <div class="col-10"><b>{{ $dataProduct['price_float'] }} ₴</b></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Quantity in stock:</b></div>
+                        <div class="col-10">{{ $product->quantity }}</div>
                     </div>
 
 {{--                    <div class="row">--}}

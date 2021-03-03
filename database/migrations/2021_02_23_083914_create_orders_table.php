@@ -35,6 +35,10 @@ class CreateOrdersTable extends Migration
                 $table->string('guest_ip', 40); // ipv4/ipv6
                 $table->string('guest_useragent', 255);
 
+                $table->string('client_first_name', 100)->nullable()->default('');
+                $table->string('client_last_name', 100)->nullable()->default('');
+                $table->string('client_patronymic_name', 100)->nullable()->default('');
+
                 $table->timestamps();
             });
         }

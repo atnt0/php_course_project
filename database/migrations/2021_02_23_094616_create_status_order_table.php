@@ -19,6 +19,8 @@ class CreateStatusOrderTable extends Migration
                 $table->bigInteger('order_id')->unsigned();
                 $table->bigInteger('status_id')->unsigned();
 
+                $table->integer('quantity')->unsigned();
+
                 $table->foreign('order_id')->references('id')->on('orders');
                 $table->foreign('status_id')->references('id')->on('order_statuses');
 

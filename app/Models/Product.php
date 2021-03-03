@@ -21,6 +21,7 @@ class Product extends Model
         'category_id',
         'user_own_id',
         'uuid',
+        'slug',
         'title',
         'title_ua',
         'title_ru',

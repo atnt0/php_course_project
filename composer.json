@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
         "mews/captcha": "^3.2",
+        "that0n3guy/transliteration": "^2.0",
         "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {

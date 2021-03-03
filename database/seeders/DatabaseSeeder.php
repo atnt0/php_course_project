@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(OrderStatusesSeeder::class);
         $this->call(StatusOrderSeeder::class); // - связующая
 
+        // php artisan make:seeder OrderProductSeeder
 
     }
 }

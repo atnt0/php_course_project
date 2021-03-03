@@ -18,7 +18,7 @@
             {{ mb_strlen($product->description_ru) > 20 ? "..." : "" }}
         </div>
         <div>
-            {{ $dataProducts[$key]['price_float'] }}
+            <b>{{ $dataProducts[$key]['price_float'] }}  ₴</b>
         </div>
         <div>
             {{ $product->category_title_ru }}

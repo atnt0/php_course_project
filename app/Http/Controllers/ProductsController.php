@@ -8,6 +8,7 @@ use App\Models\StatusProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use That0n3guy\Transliteration\Facades\Transliteration;
 use Webpatser\Uuid\Uuid;
 
 class ProductsController extends Controller
@@ -28,8 +29,13 @@ class ProductsController extends Controller
         //$products = Product::all();
         $products = Product::getProducts();
 
-        if( empty($products) )
+        if( empty($products) ){
+
+            dd([
+                'abort404' => 'here',
+            ]);
             abort(404);
+        }
 
         $dataProducts = [[]];
 
@@ -44,14 +50,28 @@ class ProductsController extends Controller
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
 //                $productPhoto = ProductPhotos::getProductPhotoByProductId($product->id)->first();
-                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)->orderBy('index', 'asc')->first();
-//                dd($productPhoto->uuid);
-                //TODO перенести в отдельный метод
-                $dataProductPhoto = [
-                    'uuid' => $productPhoto->uuid,
-                    'description_ru' => $productPhoto->description_ru,
-                    'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
-                ];
+                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)
+                    ->orderBy('index', 'asc')->first(); //->firstOrFail(); // - выдает ошибку
+
+                if( !empty($productPhoto) ){
+//                    $tmpProductPhoto = $productPhoto->toArray();
+
+                    //TODO перенести в отдельный метод
+                    $dataProductPhoto = [
+                        'uuid' => $productPhoto['uuid'],
+                        'description_ru' => $productPhoto['description_ru'],
+                        'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto['file_name'],
+                    ];
+                }
+                else
+                    {
+                    //TODO перенести в отдельный метод
+                    $dataProductPhoto = [
+                        'uuid' => '',
+                        'description_ru' => 'not_found_image',
+                        'link' => 'not_found_image',
+                    ];
+                }
 
                 $dataProducts[$key] = [
                     'price_float' => $price_float,
@@ -63,6 +83,11 @@ class ProductsController extends Controller
                         'you' => $user_own_you, // " [id: ". $user_own->id ."]"
                     ],
                 ];
+//                dd([
+//                    'product_id' => $product->id,
+//                    '$tmpProductPhoto' => $tmpProductPhoto,
+//                    '$dataProductPhoto' => $dataProductPhoto,
+//                ]);
             }
         }
 
@@ -101,21 +126,42 @@ class ProductsController extends Controller
 
         //$rr = self::PRODUCT_DEFAULT_STATUS_ID;
 
+        $toSlugTransLit = Transliteration::clean_filename($request->get('title_ru'));
+
+        $price = (int) $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+        $tax = (int) $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+
+        $quantity = (int) $request->get('quantity');
+
+        $category_id = (int) $request->get('category_id');
+        $category_id = 1;
+
+        $user_own_id = Auth::user()->id;
+
+        $title_ru = $request->get('title_ru');
+
+        $description_ru = $request->get('description_ru');
+//        $description_ru = '';
+
+
         $uuidNew  = Uuid::generate()->string;
 
         $product = new Product([
             'article_number' => 0, //TODO придумать как генерировать уникальный артикул
-            'price' => $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER, // x 10000
-            'tax' => $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER, // x 10000
-            'quantity' => $request->get('quantity'),
-            'category_id' => 0,
-            'user_own_id' => Auth::user()->id,
+            'price' => $price,
+            'tax' => $tax,
+            'quantity' => $quantity,
+            'category_id' => $category_id,
+            'user_own_id' => $user_own_id,
             'uuid' => $uuidNew,
-            'title_ru' => $request->get('title_ru'),
-            'description_ru' => $request->get('description_ru'),
+            'slug' => $toSlugTransLit,
+            'title_ru' => $title_ru,
+            'description_ru' => $description_ru,
             'meta_keywords' => '',
             'meta_description' => '',
         ]);
+
+//        dd($product->toArray());
 
         $product->save();
 
@@ -268,6 +314,8 @@ class ProductsController extends Controller
 
         if( empty($product) )
             abort(404);
+
+        //TODO Добавить пересортировку индексов
 
         $product->delete();
 
