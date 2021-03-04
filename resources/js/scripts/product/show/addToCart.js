@@ -1,15 +1,7 @@
 
-
-//let str = "/product/"; // + uuid
-
-
 // let rEv4 = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
-let reGexUuid = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i); // not v4!
 
-//let matchQueryLocation = '/product/';
-if( window.location.pathname.match(reGexUuid) ) {
-
-    //
+if( window.location.pathname.match(new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i)) ) {
 
 
     $(document).ready(function(){
@@ -49,8 +41,4 @@ if( window.location.pathname.match(reGexUuid) ) {
     });
 
 
-}
-else{
-    console.log('wrong route - ');
-    console.log(window.location.pathname);
 }

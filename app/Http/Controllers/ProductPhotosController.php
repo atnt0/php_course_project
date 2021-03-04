@@ -22,23 +22,8 @@ class ProductPhotosController extends Controller
      */
     public function index()
     {
-        //$photos = ProductPhotos::all();
         $productPhotos = ProductPhotos::getProductPhotos();
-//        $productPhotos = ProductPhotos::all();
-//        dd($productPhotos);
-
-        $dataProductPhotos = [[]];
-
-        if( count($productPhotos) > 0 )
-        {
-            foreach ($productPhotos as $key => $productPhoto) {
-                $dataProductPhotos[$key] = [
-                    'uuid' => $productPhoto->uuid,
-                    'description_ru' => $productPhoto->description_ru,
-                    'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
-                ];
-            }
-        }
+        $dataProductPhotos = ProductPhotosController::getPreDataForPhotos($productPhotos);
 
         return view('productphotos.index', compact('productPhotos', 'dataProductPhotos'));
     }
@@ -135,17 +120,7 @@ class ProductPhotosController extends Controller
             abort(404);
 
         $product = Product::where('id', '=',  $productPhoto->product_id )->firstOrFail();
-
-        $dataProductPhotos = [];
-
-        //TODO перенести в отдельный метод
-        $dataProductPhoto = [
-            'uuid' => $productPhoto->uuid,
-            'description_ru' => $productPhoto->description_ru,
-            'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
-        ];
-
-        //$products = Product::all();
+        $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
         return view('productphotos.edit', compact('productPhoto', 'dataProductPhoto', 'product'));
     }
@@ -222,8 +197,7 @@ class ProductPhotosController extends Controller
         if( empty($product) )
             abort(404);
 
-        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)
-            ->orderBy('index', 'asc')->get();
+        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->orderBy('index', 'asc')->get();
 
         if( empty($productPhotos) )
             abort(404);
@@ -284,21 +258,30 @@ class ProductPhotosController extends Controller
 
 
     /**
-     * Метод возвращает подготовленные к выводу на view данные по одному Фото
+     * Метод возвращает подготовленные к выводу на view данные по ОДНУ Фото
      */
     public static function getPreDataForPhoto(ProductPhotos $productPhoto)
     {
-        return [
-            'uuid' => $productPhoto->uuid,
-            'description_ru' => $productPhoto->description_ru,
-            'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
-        ];
+        if( !empty($productPhoto) ) {
+            return [
+                'uuid' => $productPhoto->uuid,
+                'description_ru' => $productPhoto->description_ru,
+                'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+            ];
+        }
+        else{
+            return [
+                'uuid' => '',
+                'description_ru' => 'not_found_image',
+                'link' => 'not_found_image',
+            ];
+        }
     }
 
     /**
-     * Метод возвращает подготовленные к выводу на view данные по Массиву Фото
+     * Метод возвращает подготовленные к выводу на view данные по МАССИВУ Фото
      */
-    public static function getPreDataForPhotos( $productPhotos) //  ...
+    public static function getPreDataForPhotos($productPhotos) //  ...
     {
         $dataProductPhotos = [];
 
@@ -311,7 +294,6 @@ class ProductPhotosController extends Controller
 
         return $dataProductPhotos;
     }
-
 
 
 

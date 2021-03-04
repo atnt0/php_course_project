@@ -1976,6 +1976,46 @@ __webpack_require__(/*! ./scripts/product/photo/editPositionsForProduct/sortable
 
 __webpack_require__(/*! ./scripts/product/show/addToCart */ "./resources/js/scripts/product/show/addToCart.js");
 
+__webpack_require__(/*! ./scripts/cart/removeFromCart */ "./resources/js/scripts/cart/removeFromCart.js");
+
+/***/ }),
+
+/***/ "./resources/js/scripts/cart/removeFromCart.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/scripts/cart/removeFromCart.js ***!
+  \*****************************************************/
+/***/ (() => {
+
+var matchQueryLocation = '/cart'; // if( window.location.pathname.match(new RegExp(/^\/cart$/i)) ) {
+
+if (window.location.pathname.substr(0, matchQueryLocation.length) == matchQueryLocation) {
+  $(document).ready(function () {
+    $('[data-table="insert_here"]').on('click', '[data-remove-from-cart-product-id]', function (event) {
+      event.preventDefault();
+      var el = $(this);
+      console.log('el: ', el);
+      var action = el.attr('href');
+
+      var _token = $('input[name="_token"]').val();
+
+      var rfc_product_uuid = el.attr('data-remove-from-cart-product-id');
+      var formData = new FormData();
+      formData.append('_token', _token);
+      formData.append('remove_from_cart_product_uuid', rfc_product_uuid);
+      $.ajax({
+        type: 'POST',
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function success(data) {
+          $('table[data-table="insert_here"]').empty().html(data);
+        }
+      });
+    });
+  });
+}
+
 /***/ }),
 
 /***/ "./resources/js/scripts/product/photo/editPositionsForProduct/sortable.js":
@@ -2031,13 +2071,8 @@ if (window.location.pathname.substr(0, matchQueryLocation.length) == matchQueryL
   \********************************************************/
 /***/ (() => {
 
-//let str = "/product/"; // + uuid
 // let rEv4 = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
-var reGexUuid = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i); // not v4!
-//let matchQueryLocation = '/product/';
-
-if (window.location.pathname.match(reGexUuid)) {
-  //
+if (window.location.pathname.match(new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i))) {
   $(document).ready(function () {
     $('[data-add-to-cart-product-id]').click(function (event) {
       event.preventDefault();
@@ -2066,9 +2101,6 @@ if (window.location.pathname.match(reGexUuid)) {
       });
     });
   });
-} else {
-  console.log('wrong route - ');
-  console.log(window.location.pathname);
 }
 
 /***/ }),

@@ -111,7 +111,7 @@
                         <div class="col-2 text-right"><b>Quantity:</b></div>
                         <div>
 {{--                            <input type="number" class="form-control" name="add_to_cart[quantity]" value="1">--}}
-                            <input type="number" class="form-control" name="add_to_cart_quantity" value="1">
+                            <input type="number" class="form-control text-center" name="add_to_cart_quantity" value="1">
                         </div>
                     </div>
                     <br>
@@ -123,8 +123,8 @@
 {{--                            <input type="hidden" class="form-control" name="add_to_cart[product_uuid]" value="{{ $product->uuid }}">--}}
                             <input type="hidden" class="form-control" name="add_to_cart_product_uuid" value="{{ $product->uuid }}">
                             <a href="{{ route('cart.addToCart', ['product_uuid' => $product->uuid]) }}"
-                               {{--                           data-add-to-cart-action="{{ $product->uuid }}"--}}
                                data-add-to-cart-product-id="{{ $product->uuid }}"
+                               title="Add to cart"
                                class="btn btn-success">Add to cart</a>
                         </div>
                     </div>
@@ -133,29 +133,27 @@
             </div>
             <br>
 
-
             <div class="row">
                 <div class="col-12">
                     <h4 class="display-6">Actions:</h4>
 
                     <div class="buttons">
-                            <div class="buttons-item d-inline-block">
-                                <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
-                                   class="btn btn-primary">Edit photos</a>
-                            </div>
+                        <div class="buttons-item d-inline-block">
+                            <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
+                               class="btn btn-primary">Edit photos</a>
+                        </div>
 
-                            <div class="buttons-item d-inline-block">
-                                <a href="{{ route('product.edit', [$product->uuid]) }}" class="btn btn-primary">Edit</a>
-                            </div>
+                        <div class="buttons-item d-inline-block">
+                            <a href="{{ route('product.edit', [$product->uuid]) }}" class="btn btn-primary">Edit</a>
+                        </div>
 
-                            <div class="buttons-item d-inline-block">
-                                <form action="{{ route('product.destroy', [$product->uuid]) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger" type="submit">Delete</button>
-                                </form>
-                            </div>
-
+                        <div class="buttons-item d-inline-block">
+                            <form action="{{ route('product.destroy', [$product->uuid]) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

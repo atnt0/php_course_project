@@ -44,13 +44,12 @@ Route::get('/cart', [CartsController::class, 'cart'])->name('cart.index');
 
 //Route::get('add-to-cart/{id}', 'ProductsController@addToCart');
 Route::post('/cart/{product_uuid}/add_to_cart', [CartsController::class, 'addToCart'])->name('cart.addToCart');
+Route::post('/cart/{product_uuid}/remove_from_cart', [CartsController::class, 'removeFromCart'])->name('cart.removeFromCart');
 
 /**
  * Section routes: Заказы сформированные
  *
  */
-//Route::get('/order/createFakeOrder', [OrdersController::class, 'createFakeOrder'])
-//    ->name('order.createFakeOrder');
 Route::resource('/order', OrdersController::class)
     ->except([ 'create', 'edit' ])
     ->names([

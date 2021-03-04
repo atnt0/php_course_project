@@ -1,10 +1,25 @@
 
 
 {{--{{ dd( session() ) }}--}}
+<thead>
+<tr>
+    <th>Index</th>
+    {{--                    <th>UUID</th>--}}
+    <th>Title ru</th>
+    <th>Image</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Total Price</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
 <tbody>
 
 @if( !empty($cart) )
-{{--    {{ dd( $cart ) }}--}}
+{{--        {{ dd( $cart ) }}--}}
+
+    @csrf
     @foreach($cart['products'] as $product_id => $dataOfProduct)
     <tr>
 {{--        <td>--}}
@@ -32,18 +47,24 @@
         </td>
 
         <td class="text-right">
-            <b>{{ $dataOfProduct['quantity'] }}</b>
-        </td>
-        <td class="text-right">
             {{--            {{ $dataOfProduct['price'] }}--}}
             <b>{{ $dataOfProduct['price_float'] }} ₴</b>
         </td>
+
+        <td class="text-right">
+{{--            <b>{{ $dataOfProduct['quantity'] }}</b>--}}
+            <input type="number" class="form-control text-center" name="product_cart_quantity" value="{{ $dataOfProduct['quantity'] }}">
+        </td>
+
         <td class="text-right">
             <b>{{ $dataOfProduct['multi_price_float'] }} ₴</b>
         </td>
 
         <td>
-
+            <a href="{{ route('cart.removeFromCart', ['product_uuid' => $dataOfProduct['uuid'] ]) }}"
+               data-remove-from-cart-product-id="{{ $dataOfProduct['uuid'] }}"
+               title="Remove from cart"
+               class="btn btn-danger">Remove</a>
         </td>
     </tr>
     @endforeach

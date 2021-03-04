@@ -338,13 +338,17 @@ class ProductsController extends Controller
     //TODO реализовать поиск
 
 
-
-
+    /**
+     * Метод конвертирует значение цены в читаемое для пользователя
+     */
     public static function toPriceForDisplay($price) : float
     {
         return $price > 0 ? round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2) : 0.0;
     }
 
+    /**
+     * Метод конвертирует значение цены в читаемое для пользователя
+     */
     public static function toPriceForDB($price) : int
     {
         return (int) $price * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
