@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductCategoriesController;
 use \App\Http\Controllers\ProductPhotosController;
 use \App\Http\Controllers\OrdersController;
+use \App\Http\Controllers\CartsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,8 +27,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 /**
  * Section routes: Авторизация
  */
@@ -35,12 +34,23 @@ Route::get('/register/captcha-refresh', [RegisterController::class, 'refreshCapt
 Auth::routes();
 
 
+
+
+
+
+//Route::get('cart', 'ProductsController@cart');
+
+Route::get('/cart', [CartsController::class, 'cart'])->name('cart.index');
+
+//Route::get('add-to-cart/{id}', 'ProductsController@addToCart');
+Route::post('/cart/{product_uuid}/add_to_cart', [CartsController::class, 'addToCart'])->name('cart.addToCart');
+
 /**
  * Section routes: Заказы сформированные
  *
  */
-Route::get('/order/createFakeOrder', [OrdersController::class, 'createFakeOrder'])
-    ->name('order.createFakeOrder');
+//Route::get('/order/createFakeOrder', [OrdersController::class, 'createFakeOrder'])
+//    ->name('order.createFakeOrder');
 Route::resource('/order', OrdersController::class)
     ->except([ 'create', 'edit' ])
     ->names([

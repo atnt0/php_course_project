@@ -19,13 +19,13 @@
             </div>
 
             <div class="row">
-                @if (Auth::guest())
-                    {{--                    Only registred users can be use this function.--}}
-                @else
-                    <div class="col">
-                        <a href="{{ route('order.createFakeOrder') }}" class="mb-3 btn btn-info text-white">[Create fake Order]</a>
-                    </div>
-                @endif
+{{--                @if (Auth::guest())--}}
+{{--                    --}}{{--                    Only registred users can be use this function.--}}
+{{--                @else--}}
+{{--                    <div class="col">--}}
+{{--                        <a href="{{ route('order.createFakeOrder') }}" class="mb-3 btn btn-info text-white">[Create fake Order]</a>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
 
 {{--                <div class="col">--}}
 {{--                    <div class="float-right">--}}
@@ -48,7 +48,7 @@
                     <th>Full name</th>
                     <th>Contacts</th>
                     <th>Address</th>
-                    <th>User_own</th>
+{{--                    <th>User_own</th>--}}
                     <th>User Data</th>
 {{--                    <th colspan="3">Links</th>--}}
                 </tr>

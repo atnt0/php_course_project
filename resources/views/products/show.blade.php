@@ -105,6 +105,29 @@
                             </ul>
                         </div>
                     </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Quantity:</b></div>
+                        <div>
+{{--                            <input type="number" class="form-control" name="add_to_cart[quantity]" value="1">--}}
+                            <input type="number" class="form-control" name="add_to_cart_quantity" value="1">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div>
+                            @csrf
+{{--                            <input type="hidden" class="form-control" name="add_to_cart[product_uuid]" value="{{ $product->uuid }}">--}}
+                            <input type="hidden" class="form-control" name="add_to_cart_product_uuid" value="{{ $product->uuid }}">
+                            <a href="{{ route('cart.addToCart', ['product_uuid' => $product->uuid]) }}"
+                               {{--                           data-add-to-cart-action="{{ $product->uuid }}"--}}
+                               data-add-to-cart-product-id="{{ $product->uuid }}"
+                               class="btn btn-success">Add to cart</a>
+                        </div>
+                    </div>
 
                 </div>
             </div>

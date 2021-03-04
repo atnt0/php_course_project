@@ -28,9 +28,9 @@
             {{ $order->address_apart }} <br>
             NP Office: {{ $order->address_np_number }}
         </td>
-        <td>
-            {{ $order->user_own_id }}
-        </td>
+{{--        <td>--}}
+{{--            {{ $order->user_own_id }}--}}
+{{--        </td>--}}
         <td>
             {{ $order->guest_ip }}<br>
             {{ $order->guest_useragent }}

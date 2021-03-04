@@ -13,7 +13,8 @@ use Webpatser\Uuid\Uuid;
 
 class ProductsController extends Controller
 {
-    const PRODUCT_MONEY_FIX_NUMBER = 10000; // для точных операций с денежными значениями
+    //todo убрать паблик
+    public const PRODUCT_MONEY_FIX_NUMBER = 10000; // для точных операций с денежными значениями
 
     const PRODUCT_DEFAULT_STATUS_NAME = 'hiddencompletely'; //
 
@@ -44,7 +45,8 @@ class ProductsController extends Controller
         //TODO разобрать на отдельные методы
         if( count($products) > 0 ) {
             foreach ($products as $key => $product) {
-                $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+                $price_float = self::toPriceForDisplay($product->price);
+
 
                 $user_own = User::find($product->user_own_id);
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
@@ -95,6 +97,7 @@ class ProductsController extends Controller
         // получить список фотографий продукта в сортированном виде по порядку
 
 
+
         return view('products.index', compact('products', 'dataProducts'));
     }
 
@@ -128,8 +131,11 @@ class ProductsController extends Controller
 
         $toSlugTransLit = Transliteration::clean_filename($request->get('title_ru'));
 
-        $price = (int) $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
-        $tax = (int) $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+        $price = $request->get('price');
+        $tax = $request->get('tax');
+
+        $price = self::toPriceForDB($price);
+        $tax = self::toPriceForDB($tax);
 
         $quantity = (int) $request->get('quantity');
 
@@ -198,8 +204,8 @@ class ProductsController extends Controller
 //        dd($productPhotos);
 //        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->get();
 
-        $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
-        $tax_float = round($product->tax / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+        $price_float = self::toPriceForDisplay($product->price);
+        $tax_float = self::toPriceForDisplay($product->tax);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
@@ -246,8 +252,8 @@ class ProductsController extends Controller
         if( empty($product) )
             abort(404);
 
-        $price_float = round($product->price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
-        $tax_float = round($product->tax / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+        $price_float = self::toPriceForDisplay($product->price);
+        $tax_float = self::toPriceForDisplay($product->tax);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
@@ -288,12 +294,17 @@ class ProductsController extends Controller
         if( empty($product) )
             abort(404);
 
+        $title_ru = $request->get('title_ru');
+        $description_ru = $request->get('description_ru');
+        $price = $request->get('price');
+        $tax = $request->get('tax');
+        $quantity = $request->get('quantity');
 
-        $product->title_ru = $request->get('title_ru');
-        $product->description_ru = $request->get('description_ru');
-        $product->price = $request->get('price') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
-        $product->tax = $request->get('tax') * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
-        $product->quantity = $request->get('quantity');
+        $product->title_ru = $title_ru;
+        $product->description_ru = $description_ru;
+        $product->price = self::toPriceForDB($price);
+        $product->tax = self::toPriceForDB($tax);
+        $product->quantity = $quantity;
 
         $product->save();
 
@@ -325,5 +336,20 @@ class ProductsController extends Controller
     }
 
     //TODO реализовать поиск
+
+
+
+
+    public static function toPriceForDisplay($price) : float
+    {
+        return $price > 0 ? round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2) : 0.0;
+    }
+
+    public static function toPriceForDB($price) : int
+    {
+        return (int) $price * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+    }
+
+
 
 }

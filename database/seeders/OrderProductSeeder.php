@@ -18,11 +18,13 @@ class OrderProductSeeder extends Seeder
             [
                 'product_id' => 7,
                 'order_id' => 1,
+                'price' => 12110000,
+                'tax' => 0,
                 'quantity' => 12,
             ],
         ];
 
-        // for product_order
+        // for order_product
 
         if( count($arrayOrderProducts) > 0 ) {
 //            $dateTimeNow = date('YYYY-MM-DD hh:mm:ss'); // MySql format date time
@@ -30,13 +32,17 @@ class OrderProductSeeder extends Seeder
 
             foreach ($arrayOrderProducts as $orderProduct) {
                 //TODO заменить на работу с моделью или репозиторием
-                DB::table('product_order')
+                DB::table('order_product')
                     ->insert([
                         'order_id' => $orderProduct['order_id'],
                         'product_id' => $orderProduct['product_id'],
+
+                        'price' => $orderProduct['price'],
+                        'tax' => $orderProduct['tax'],
                         'quantity' => $orderProduct['quantity'],
-//                        'created_at' => $dateTimeNow,
-//                        'updated_at' => $dateTimeNow,
+
+                        'created_at' => $dateTimeNow,
+                        'updated_at' => $dateTimeNow,
                     ]);
             }
         }

@@ -242,7 +242,7 @@ class ProductPhotosController extends Controller
      */
     public function createForProduct($product_uuid)
     {
-        $product = Product::where('uuid', '=',  $product_uuid )->firstOrFail();
+        $product = Product::where('uuid', '=', $product_uuid)->firstOrFail();
 
         if( empty($product) )
             abort(404);

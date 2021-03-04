@@ -1974,6 +1974,8 @@ __webpack_require__(/*! ./scripts/register/captcha */ "./resources/js/scripts/re
 
 __webpack_require__(/*! ./scripts/product/photo/editPositionsForProduct/sortable */ "./resources/js/scripts/product/photo/editPositionsForProduct/sortable.js");
 
+__webpack_require__(/*! ./scripts/product/show/addToCart */ "./resources/js/scripts/product/show/addToCart.js");
+
 /***/ }),
 
 /***/ "./resources/js/scripts/product/photo/editPositionsForProduct/sortable.js":
@@ -2019,6 +2021,54 @@ if (window.location.pathname.substr(0, matchQueryLocation.length) == matchQueryL
       }
     });
   });
+}
+
+/***/ }),
+
+/***/ "./resources/js/scripts/product/show/addToCart.js":
+/*!********************************************************!*\
+  !*** ./resources/js/scripts/product/show/addToCart.js ***!
+  \********************************************************/
+/***/ (() => {
+
+//let str = "/product/"; // + uuid
+// let rEv4 = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
+var reGexUuid = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i); // not v4!
+//let matchQueryLocation = '/product/';
+
+if (window.location.pathname.match(reGexUuid)) {
+  //
+  $(document).ready(function () {
+    $('[data-add-to-cart-product-id]').click(function (event) {
+      event.preventDefault();
+      var el = $(this);
+      var action = el.attr('href');
+
+      var _token = $('input[name="_token"]').val(); // let atc_product_uuid = $('input[name="add_to_cart[product_uuid]"]').val();
+
+
+      var atc_product_uuid = $('input[name="add_to_cart_product_uuid"]').val(); // let atc_quantity = $('input[name="add_to_cart[quantity]"]').val();
+
+      var atc_quantity = $('input[name="add_to_cart_quantity"]').val();
+      var formData = new FormData();
+      formData.append('_token', _token); // formData.append('add_to_cart[product_uuid]', atc_product_uuid);
+
+      formData.append('add_to_cart_product_uuid', atc_product_uuid); // formData.append('add_to_cart[quantity]', atc_quantity);
+
+      formData.append('add_to_cart_quantity', atc_quantity);
+      $.ajax({
+        type: 'POST',
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function success(data) {}
+      });
+    });
+  });
+} else {
+  console.log('wrong route - ');
+  console.log(window.location.pathname);
 }
 
 /***/ }),

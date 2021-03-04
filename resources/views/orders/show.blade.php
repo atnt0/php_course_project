@@ -3,7 +3,7 @@
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Show a Order</h1>
+            <h1 class="display-3">Show an Order</h1>
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -38,6 +38,14 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
 
+
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Created at:</b></div>
+                        <div class="col-10">
+                            {{ $order->created_at }}
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-2 text-right"><b>Comment:</b></div>
                         <div class="col-10">{{ $order->comment }}</div>
@@ -69,7 +77,8 @@
                     <div class="row">
                         <div class="col-2 text-right"><b>User own:</b></div>
                         <div class="col-10">
-                            {{ $order->user_own_id }}
+{{--                            {{ $order->user_own_id }}--}}
+                            {{ $dataOrder['user_own_name'] }}
                         </div>
                     </div>
 
@@ -79,6 +88,7 @@
                             {{ $order->guest_ip }}
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-2 text-right"><b>User-agent:</b></div>
                         <div class="col-10">
@@ -91,17 +101,76 @@
 {{--                        <div class="col-10">{{ $order->quantity }}</div>--}}
 {{--                    </div>--}}
 
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Products:</b></div>
+                        <div class="col-10">
+
+                            <table class="table table-striped" data-table="insert_here">
+                                <thead>
+                                <tr>
+{{--                                    <th>UUID</th>--}}
+                                    <th>Title ru</th>
+                                    <th>Image</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total Price</th>
+{{--                                    <th colspan="3">Actions</th>--}}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($products as $key => $product)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('product.show', [$product->uuid]) }}" target="_blank">
+                                                {{ mb_substr($product->title_ru, 0, 50) }}
+                                                {{ mb_strlen($product->title_ru) > 50 ? "..." : "" }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ $dataProducts[$key]['photo_main']['link'] }}" target="_blank">
+                                                <img src="{{ $dataProducts[$key]['photo_main']['link'] }}"
+                                                     title="{{ $dataProducts[$key]['photo_main']['description_ru'] }}"
+                                                     style="width: 50px; height: auto; max-height: 100px;">
+                                            </a>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>{{ $product->op_quantity }}</b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>{{ $dataProducts[$key]['price_float'] }} ₴</b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>{{ $dataProducts[$key]['price_total'] }} ₴</b>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                                </tbody>
+                                <tfoot class="thead-light">
+                                <tr>
+                                    <td class="text-right"><b>Total:</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <b>{{ $dataOrder['total_price'] }} ₴</b>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
             </div>
             <br>
 
 
-            <div class="row">
-                <div class="col-12">
-                    <h4 class="display-6">Actions:</h4>
+{{--            <div class="row">--}}
+{{--                <div class="col-12">--}}
+{{--                    <h4 class="display-6">Actions:</h4>--}}
 
-                    <div class="buttons">
+{{--                    <div class="buttons">--}}
 
 {{--                        <div class="buttons-item d-inline-block">--}}
 {{--                            <form action="{{ route('product.destroy', [$product->uuid]) }}" method="post">--}}
@@ -111,9 +180,9 @@
 {{--                            </form>--}}
 {{--                        </div>--}}
 
-                    </div>
-                </div>
-            </div>
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <br>
 
         </div>

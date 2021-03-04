@@ -16,8 +16,8 @@
     <li>&#9989; ProductsController - контроллер для товаров</li>
     <li>&#9989; ProductCategoriesController - контроллер для категорий товаров</li>
     <li>&#9989; ProductPhotosController - контроллер для фотографий продукта</li>
-    <li>&#10060; OrdersController - контроллер для заказов</li>
-    <li>&#10060; CartsController - контроллер для корзин</li>
+    <li>&#9989; OrdersController - контроллер для заказов</li>
+    <li>&#9989; CartsController - контроллер для корзин</li>
     <li>&#10060; ProductTagsController - контроллер для тегов продуктов</li>
     <li>&#10060; AttributesController - контроллер для атрибутов (для поиска) товаров/категорий</li>
     <li>&#10060; UsersController - контроллер для управления пользователями</li>
