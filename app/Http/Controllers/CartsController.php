@@ -29,14 +29,14 @@ class CartsController extends Controller
     public function addToCart(Request $request, $product_uuid)
     {
         $request->validate([
-            'add_to_cart_product_uuid' => 'required|uuid',
-            'add_to_cart_quantity' => 'required|integer', // unsigned
+            'product_uuid' => 'required|uuid',
+            'product_quantity' => 'required|integer|min:0|max:1000', // unsigned
         ]);
 
-        $post_product_uuid = $request->get('add_to_cart_product_uuid');
-        $post_quantity = (int) $request->get('add_to_cart_quantity');
+        $post_product_uuid = $request->get('product_uuid');
+        $post_product_quantity = (int) $request->get('product_quantity');
 
-        if( empty($post_quantity) || empty($product_uuid) || empty($post_product_uuid)  )
+        if( empty($post_product_quantity) || empty($product_uuid) || empty($post_product_uuid)  )
             abort(404);
 
         //todo добавить проверку на "скрытость" товара от лишних глазок
@@ -50,16 +50,6 @@ class CartsController extends Controller
         $cart = session('cart');
 
         // создаем корзину
-        if( empty($cart) || !isset($cart['products']) ) {
-            $cart = self::getStructureCartNewWithGuestData();
-
-            session()->put('cart', $cart);
-            session()->save();
-
-            $result = 'create cart and add new';
-        }
-
-        $cart = session('cart');
         $cart = self::createCartIfNotExists($cart);
         session()->put('cart', $cart);
         session()->save();
@@ -70,7 +60,7 @@ class CartsController extends Controller
         // если в корзине нет данного продукта
         if ( !isset($cart['products'][$post_product_uuid]) ) {
             $newProduct = self::getStructureCartProductNew($cart, $product, [
-                'post_quantity' => $post_quantity,
+                'post_quantity' => $post_product_quantity,
             ]);
             $cart['products'][$post_product_uuid] = $newProduct;
 
@@ -81,7 +71,8 @@ class CartsController extends Controller
         }
         else {
             $updateProduct = self::getStructureCartProductUpdated($cart, $cart['products'][$post_product_uuid], $product, [
-                'post_quantity' => $post_quantity,
+                'add_quantity' => true,
+                'post_quantity' => $post_product_quantity,
             ]);
             $cart['products'][$post_product_uuid] = $updateProduct;
 
@@ -151,6 +142,90 @@ class CartsController extends Controller
     }
 
 
+    /**
+     * Изменение количества Продукта в Корзине
+     */
+    public function changeQuantityProductInCart(Request $request, $product_uuid)
+    {
+        $request->validate([
+            'product_uuid' => 'required|uuid',
+            'product_quantity' => 'required|integer|min:0|max:1000', // unsigned
+        ]);
+
+        $post_product_uuid = $request->get('product_uuid');
+        $post_product_quantity = (int) $request->get('product_quantity');
+//
+//        dd([
+//            'post_product_uuid' => $post_product_uuid,
+//            'post_quantity' => $post_product_quantity,
+//            'product_uuid' => $product_uuid,
+//        ]);
+
+        if( empty($post_product_quantity) || empty($product_uuid) || empty($post_product_uuid)  )
+            abort(404);
+
+        //todo добавить проверку на "скрытость" товара от лишних глазок
+        $product = Product::where('uuid', '=', $product_uuid)->firstOrFail();
+
+        if( empty($product) )
+            abort(404);
+
+        $result = '';
+
+        $cart = session('cart');
+
+        // создаем корзину
+        $cart = self::createCartIfNotExists($cart);
+        session()->put('cart', $cart);
+        session()->save();
+
+
+        // если товар есть в корзине
+        if ( isset($cart['products'][$post_product_uuid]) ) {
+
+            $updateProduct = self::getStructureCartProductUpdated($cart, $cart['products'][$post_product_uuid], $product, [
+                //'post_quantity' => $post_product_quantity,
+                'post_quantity' => $post_product_quantity,
+            ]);
+            $cart['products'][$post_product_uuid] = $updateProduct;
+
+            session()->put('cart', $cart);
+            session()->save();
+
+            $result = 'add quantity';
+
+
+        }
+
+
+        $cart = self::getCartWithRefreshedTotalPrice($cart);
+
+        session()->put('cart', $cart);
+        session()->save();
+
+
+
+        $product_multi_price = $cart['products'][$post_product_uuid] ? $cart['products'][$post_product_uuid]['multi_price_float'] : 0.0;
+        $cart_total_price = $cart['dataCart']['total_price_float'] ? $cart['dataCart']['total_price_float'] : 0.0;
+
+
+        return response()->json ([
+            'update' => [
+                'product_in_cart' => [
+                    'uuid' => $post_product_uuid,
+                    'fields' => [
+                        'multi_price' => $product_multi_price,
+                    ],
+                ],
+                'cart' => [
+                    'total_price' => $cart_total_price,
+                ]
+            ],
+        ]);
+    }
+
+
+
 
 
 
@@ -193,11 +268,11 @@ class CartsController extends Controller
      * */
     private function getStructureCartProductNew($cart, $productFromDB, $dataArray = []) : array
     {
-        $add_quantity = (int) (!empty($dataArray['post_quantity']) && $dataArray['post_quantity'] > 1 ? $dataArray['post_quantity'] : 1);
+        $new_quantity = (int) (!empty($dataArray['post_quantity']) && $dataArray['post_quantity'] > 1 ? $dataArray['post_quantity'] : 1);
 
         $price_float = ProductsController::toPriceForDisplay($productFromDB->price);
 
-        $multi_price = $productFromDB->price * $add_quantity;
+        $multi_price = $productFromDB->price * $new_quantity;
         $multi_price_float = ProductsController::toPriceForDisplay($multi_price);
 
         //todo firstOrFail(); выдает ошибку
@@ -217,7 +292,7 @@ class CartsController extends Controller
             'price' => $productFromDB->price,
             'price_float' => $price_float, // for one item
 
-            'quantity' => $add_quantity,
+            'quantity' => $new_quantity,
             // for all items
             'multi_price' => $multi_price,
             'multi_price_float' => $multi_price_float,
@@ -231,9 +306,19 @@ class CartsController extends Controller
      */
     private function getStructureCartProductUpdated($cart, $productCart, $productFromDB, $dataArray = []) : array
     {
-        $add_quantity = (int) (!empty($dataArray['post_quantity']) && $dataArray['post_quantity'] > 1 ? $dataArray['post_quantity'] : 1);
+        // не "добавить количество", а "изменить на количество"
 
-        $now_quantity = $productCart['quantity'] + $add_quantity;
+        $add_quantity = !empty($dataArray['add_quantity']) && $dataArray['add_quantity'];
+
+        $in_new_quantity = (int) (!empty($dataArray['post_quantity']) && $dataArray['post_quantity'] > 1 ? $dataArray['post_quantity'] : 1);
+
+        $now_quantity = $add_quantity ? $productCart['quantity'] + $in_new_quantity : $in_new_quantity;
+
+//        dd([
+//            'add_quantity' => $add_quantity,
+//            'in_new_quantity' => $in_new_quantity,
+//            'now_quantity' => $now_quantity,
+//        ]);
         $productCart['quantity'] = $now_quantity;
 
         $multi_price = $productFromDB->price * $now_quantity;

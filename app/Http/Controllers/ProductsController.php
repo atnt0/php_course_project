@@ -341,9 +341,12 @@ class ProductsController extends Controller
     /**
      * Метод конвертирует значение цены в читаемое для пользователя
      */
-    public static function toPriceForDisplay($price) : float
+    public static function toPriceForDisplay($price) : string
     {
-        return $price > 0 ? round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2) : 0.0;
+//        return $price > 0 ? round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2) : 0.0;
+//        $number = round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
+        $number = $price / self::PRODUCT_MONEY_FIX_NUMBER;
+        return number_format($number, 2, '.', ' ');
     }
 
     /**

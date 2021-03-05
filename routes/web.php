@@ -43,8 +43,12 @@ Auth::routes();
 Route::get('/cart', [CartsController::class, 'cart'])->name('cart.index');
 
 //Route::get('add-to-cart/{id}', 'ProductsController@addToCart');
-Route::post('/cart/{product_uuid}/add_to_cart', [CartsController::class, 'addToCart'])->name('cart.addToCart');
-Route::post('/cart/{product_uuid}/remove_from_cart', [CartsController::class, 'removeFromCart'])->name('cart.removeFromCart');
+Route::post('/cart/{product_uuid}/add_to_cart', [CartsController::class, 'addToCart'])->name('cart.addToCart'); // on page Product !
+Route::post('/cart/{product_uuid}/remove_from_cart', [CartsController::class, 'removeFromCart'])->name('cart.removeFromCart'); // on page Cart !
+
+
+Route::post('/cart/{product_uuid}/change_quantity', [CartsController::class, 'changeQuantityProductInCart'])->name('cart.changeQuantityProductInCart');
+
 
 /**
  * Section routes: Заказы сформированные

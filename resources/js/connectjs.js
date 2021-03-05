@@ -1,8 +1,29 @@
 
-require('./scripts/register/captcha');
+function checkLocation(needLocation) {
+    return window.location.pathname.substr(0, needLocation.length) == needLocation ;
+}
+function checkLocationByRegEx(needLocationPattern) {
+    return window.location.pathname.match( new RegExp(needLocationPattern) );
+}
 
-require('./scripts/product/photo/editPositionsForProduct/sortable');
 
-require('./scripts/product/show/addToCart');
 
-require('./scripts/cart/removeFromCart');
+if( checkLocation('/register') ) {
+    require('./scripts/register/captcha');
+}
+
+if( checkLocation('/product/photo/editList') ) {
+    require('./scripts/product_photo/editPositionsForProduct/sortable');
+}
+
+// let rEv4 = new RegExp(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
+if( checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i) ) {
+    require('./scripts/product/show/addToCart');
+    require('./scripts/product/show/changeQuantity');
+}
+
+// if( window.location.pathname.match(new RegExp(/^\/cart$/i)) ) {
+if( checkLocation('/cart') ) {
+    require('./scripts/cart/removeFromCart');
+    require('./scripts/cart/changeQuantity');
+}
