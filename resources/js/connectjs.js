@@ -26,4 +26,5 @@ if( checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-
 if( checkLocation('/cart') ) {
     require('./scripts/cart/removeFromCart');
     require('./scripts/cart/changeQuantity');
+    require('./scripts/cart/checkout');
 }

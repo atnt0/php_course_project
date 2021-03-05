@@ -11,16 +11,27 @@ class CartsController extends Controller
 {
 
     /**
-     * Возвращает данные Корзины со всеми Продуктами
+     * Возвращает первую страницу корзины - список Товаров в корзине с возможностью их редактировать
      */
     public function cart() // может быть show?
     {
-//        dd($_SERVER);
-
         $cart = session('cart');
 
         return view('carts.cart', compact('cart',));
     }
+
+
+    /**
+     * Возвращает данные Корзины со всеми Продуктами
+     */
+    public function checkout() // может быть show?
+    {
+        $cart = session('cart');
+
+
+        return view('carts.checkout', compact('cart',));
+    }
+
 
 
     /**
@@ -91,7 +102,6 @@ class CartsController extends Controller
         return $result; //view('productphotos.createForProduct', compact('product'));
     }
 
-
     /**
      * Удаление продукта из Корзины
      */
@@ -141,7 +151,6 @@ class CartsController extends Controller
         return view('carts.parts._items', compact('cart'));
     }
 
-
     /**
      * Изменение количества Продукта в Корзине
      */
@@ -154,12 +163,6 @@ class CartsController extends Controller
 
         $post_product_uuid = $request->get('product_uuid');
         $post_product_quantity = (int) $request->get('product_quantity');
-//
-//        dd([
-//            'post_product_uuid' => $post_product_uuid,
-//            'post_quantity' => $post_product_quantity,
-//            'product_uuid' => $product_uuid,
-//        ]);
 
         if( empty($post_product_quantity) || empty($product_uuid) || empty($post_product_uuid)  )
             abort(404);
@@ -232,14 +235,12 @@ class CartsController extends Controller
     /**
      * Создаем Корзину если ее нет
      */
-    private function createCartIfNotExists($cart){
-        if( empty($cart) || !isset($cart['products']) ) {
+    private function createCartIfNotExists($cart) {
+        if( empty($cart) || !isset($cart['products']) )
             $cart = self::getStructureCartNewWithGuestData();
-        }
 
         return $cart;
     }
-
 
 
     /**

@@ -15,9 +15,15 @@ class Order extends Model
 
     protected $fillable = [
         'user_own_id',
+
         'comment',
         'email',
         'phone',
+
+        'client_first_name',
+        'client_last_name',
+        'client_patronymic_name',
+
         'address_city',
         'address_zip',
         'address_street',
@@ -25,6 +31,7 @@ class Order extends Model
         'address_floor',
         'address_apart',
         'address_np_number',
+
         'guest_ip',
         'guest_useragent',
     ];

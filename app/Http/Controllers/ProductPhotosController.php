@@ -260,13 +260,16 @@ class ProductPhotosController extends Controller
     /**
      * Метод возвращает подготовленные к выводу на view данные по ОДНУ Фото
      */
-    public static function getPreDataForPhoto(ProductPhotos $productPhoto)
+    public static function getPreDataForPhoto( $productPhoto) // ProductPhotos
     {
+        if( is_object($productPhoto) )
+            $productPhoto = (array) $productPhoto;
+
         if( !empty($productPhoto) ) {
             return [
-                'uuid' => $productPhoto->uuid,
-                'description_ru' => $productPhoto->description_ru,
-                'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
+                'uuid' => $productPhoto['uuid'],
+                'description_ru' => $productPhoto['description_ru'],
+                'link' => self::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto['file_name'],
             ];
         }
         else{
@@ -281,7 +284,7 @@ class ProductPhotosController extends Controller
     /**
      * Метод возвращает подготовленные к выводу на view данные по МАССИВУ Фото
      */
-    public static function getPreDataForPhotos($productPhotos) //  ...
+    public static function getPreDataForPhotos( $productPhotos) //  ...
     {
         $dataProductPhotos = [];
 

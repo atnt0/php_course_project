@@ -6,6 +6,12 @@
 <!-- Right Side Of Navbar -->
 <ul class="navbar-nav ml-auto">
     <li class="nav-item">
+        <a class="nav-link nav-link" href="{{ route('cart.index') }}"><b>Cart</b></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-link" href="{{ route('order.index') }}">Orders</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link nav-link" href="{{ route('product.index') }}">Products</a>
     </li>
     <li class="nav-item">
@@ -13,12 +19,6 @@
     </li>
     <li class="nav-item">
         <a class="nav-link nav-link" href="{{ route('product.photo.index') }}">Product Photos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link nav-link" href="{{ route('order.index') }}">Orders</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link nav-link" href="{{ route('cart.index') }}">Cart (virtual)</a>
     </li>
 
 {{--    @if ( Auth::user() && Auth::user()->hasRole('admin') )--}}

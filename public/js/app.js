@@ -1908,6 +1908,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
+Vue.config.devtools = false;
+Vue.config.productionTip = false;
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -1998,6 +2000,8 @@ if (checkLocation('/cart')) {
   __webpack_require__(/*! ./scripts/cart/removeFromCart */ "./resources/js/scripts/cart/removeFromCart.js");
 
   __webpack_require__(/*! ./scripts/cart/changeQuantity */ "./resources/js/scripts/cart/changeQuantity.js");
+
+  __webpack_require__(/*! ./scripts/cart/checkout */ "./resources/js/scripts/cart/checkout.js");
 }
 
 /***/ }),
@@ -2107,6 +2111,49 @@ $(document).ready(function () {
     }
 
     down_product_quantity_btn.attr('disabled', newVal <= 1);
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/js/scripts/cart/checkout.js":
+/*!***********************************************!*\
+  !*** ./resources/js/scripts/cart/checkout.js ***!
+  \***********************************************/
+/***/ (() => {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+$(document).ready(function () {
+  $('.container').on('click', '[data-submit="checkout"]', function (event) {
+    event.preventDefault();
+    var el = $(this); // console.log('el: ', el);
+
+    var form = el.parents('form');
+    console.log('form: ', form);
+    var formElem = form.get(0);
+    console.log('formElem: ', formElem);
+    var formData = new FormData(formElem); // console.log('formData.entries(): ', formData.entries() );
+    // console.log('formData.keys(): ', formData.keys() );
+    // console.log('formData.values(): ', formData.values() );
+
+    var _iterator = _createForOfIteratorHelper(formData.entries()),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var pair = _step.value;
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
   });
 });
 

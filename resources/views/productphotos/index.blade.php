@@ -18,17 +18,17 @@
                 @endif
             </div>
 
-            <div class="row">
-                @if (Auth::guest())
-                    {{--                    Only registred users can be use this function.--}}
-                @else
-                    <div class="col">
-                        <a href="{{ route('product.photo.create') }}" class="mb-3 btn btn-info text-white">Add photo</a>
-                    </div>
-                @endif
+{{--            <div class="row">--}}
+{{--                @if (Auth::guest())--}}
+{{--                    --}}{{--                    Only registred users can be use this function.--}}
+{{--                @else--}}
+{{--                    <div class="col">--}}
+{{--                        <a href="{{ route('product.photo.create') }}" class="mb-3 btn btn-info text-white">Add photo</a>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
 
-            </div>
-            <br>
+{{--            </div>--}}
+{{--            <br>--}}
 
 
             <table class="table table-striped" data-table="insert_here">
