@@ -1,11 +1,8 @@
 @foreach($orders as $key => $order)
 
-    <tr>
+    <tr data-order-uuid="{{ $order->uuid }}">
         <td>
             {{ $order->id }}
-        </td>
-        <td>
-            {{ $order->uuid }}
         </td>
         <td>
             {{ $order->comment }}
@@ -16,8 +13,8 @@
             {{ $order->client_patronymic_name }}
         </td>
         <td>
-            {{ $order->email }}
-            {{ $order->phone }}
+            {{ $order->client_email }}
+            {{ $order->client_phone }}
         </td>
         <td>
             {{ $order->address_city }},

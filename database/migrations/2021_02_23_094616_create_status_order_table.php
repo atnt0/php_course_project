@@ -16,12 +16,11 @@ class CreateStatusOrderTable extends Migration
         if (!Schema::hasTable('status_order')) {
             Schema::create('status_order', function (Blueprint $table) {
                 $table->id();
-                $table->bigInteger('order_id')->unsigned();
+
+                $table->string('order_uuid', 36);
                 $table->bigInteger('status_id')->unsigned();
 
-                $table->integer('quantity')->unsigned();
-
-                $table->foreign('order_id')->references('id')->on('orders');
+                $table->foreign('order_uuid')->references('uuid')->on('orders');
                 $table->foreign('status_id')->references('id')->on('order_statuses');
 
                 $table->timestamps();
@@ -38,7 +37,7 @@ class CreateStatusOrderTable extends Migration
     {
         //TODO может стоит добавить проверку на существования базы?
         Schema::table('status_order', function (Blueprint $table) {
-            $table->dropForeign(['order_id']);
+            $table->dropForeign(['order_uuid']);
             $table->dropForeign(['status_id']);
         });
         Schema::dropIfExists('status_order');

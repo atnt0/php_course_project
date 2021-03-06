@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductPhotos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use Webpatser\Uuid\Uuid;
 
 
 class CartsController extends Controller
 {
+
+    /**
+     * Pages
+     */
 
     /**
      * Возвращает первую страницу корзины - список Товаров в корзине с возможностью их редактировать
@@ -16,6 +25,10 @@ class CartsController extends Controller
     public function cart() // может быть show?
     {
         $cart = session('cart');
+
+        $cart = self::createCartIfNotExists($cart);
+        session()->put('cart', $cart);
+        session()->save();
 
         return view('carts.cart', compact('cart',));
     }
@@ -28,11 +41,91 @@ class CartsController extends Controller
     {
         $cart = session('cart');
 
+        $cart = self::createCartIfNotExists($cart);
+        session()->put('cart', $cart);
+        session()->save();
 
-        return view('carts.checkout', compact('cart',));
+
+
+
+        // значения для генерирования формы
+        $dataCart = [
+            'select_method_payment' => [
+                'name' => 'method_payment',
+                'options' => [
+                    'cashondelivery' => [
+                        'selected' => true,
+                        'title' => 'Сash on delivery',
+                        'title_ua' => 'Післяплатою',
+                        'title_ru' => 'Наложенным платежом',
+                    ],
+                    'сashpayment' => [
+                        'title' => 'Сash payment',
+                        'title_ua' => 'Готівкою',
+                        'title_ru' => 'Наличными',
+                    ],
+                ]
+            ],
+            'select_method_delivery' => [
+                'name' => 'method_delivery',
+                'options' => [
+                    'tobranch' => [
+                        'selected' => true,
+                        'title' => 'Delivery to the branch',
+                        'title_ua' => 'Доставка до відділення',
+                        'title_ru' => 'Доставка в отделение',
+                    ],
+                    'сourier' => [
+                        'title' => 'Courier delivery to the address',
+                        'title_ua' => 'Доставка кур\'єром на адресу',
+                        'title_ru' => 'Доставка курьером на адрес',
+                    ],
+                    'selfpickup' => [
+                        'title' => 'Self-pickup',
+                        'title_ua' => 'Самовивіз',
+                        'title_ru' => 'Самовывоз',
+                    ],
+                ],
+            ],
+        ];
+
+        // тестовые значения для заполнения формы, в дальнейшем извлекать из сессии правильные данные
+        $dataFrom = [
+            'address' => [
+                'city' => 'Киев',
+                'zip' => '02000',
+                'street' => 'просп. Героев Сталинграда',
+                'house' => '7',
+                'entrance' => '2',
+                'floor' => '9',
+                'apartment' => '48',
+                'np_number' => '12',
+            ],
+            'name' => [
+                'last' => 'Уваров',
+                'first' => 'Егор',
+                'patronymic' => 'Станиславович',
+            ],
+            'contact' => [
+                'phone' => '+380509876543',
+                'email' => 'you@and.you.too',
+            ],
+            'order' => [
+                'comment' => '',
+            ],
+        ];
+
+
+
+
+        return view('carts.checkout',
+            compact('cart', 'dataCart', 'dataFrom'));
     }
 
 
+    /**-
+     * Events
+     */
 
     /**
      * Добавление продукта в Корзину
@@ -227,10 +320,148 @@ class CartsController extends Controller
         ]);
     }
 
+    /**
+     * Обработка формы оформления заказа
+     */
+    public function checkoutSubmit(Request $request) {
+        $request->validate([
+            'method_payment' => 'required|string|min:4|max:30',
+            'method_delivery' => 'required|string|min:4|max:30',
+
+            'address_city' => 'required|string|min:4|max:30',
+            'address_zip' => 'min:1|max:10',
+            'address_street' => 'required|string|min:4|max:50', // ?
+            'address_house' => 'required|string|min:1|max:10', // ?
+            'address_entrance' => 'integer|min:1|max:20',
+            'address_floor' => 'integer|min:1|max:100',
+            'address_apartment' => 'required|string|min:1|max:5', // ?
+
+            'address_np_number' => 'string|min:1|max:50', // ?
+
+            'name_first' => 'string|min:1|max:100',
+            'name_last' => 'string|min:1|max:100',
+            'name_patronymic' => 'string|min:1|max:100',
+
+            'contact_phone' => 'string|min:1|max:50',
+            'contact_email' => 'string|min:1|max:255',
+            'order_comment' => 'max:255',
+
+        ]);
+
+        $fields = $request->all();
+
+        $order_comment = $request->get('order_comment');
+        $contact_email = $request->get('contact_email');
+        $contact_phone = $request->get('contact_phone');
+
+        $name_patronymic = $request->get('name_patronymic');
+        $name_last = $request->get('name_last');
+        $name_first = $request->get('name_first');
+
+        $address_np_number = $request->get('address_np_number');
+
+        $address_apartment = $request->get('address_apartment');
+        $address_floor = $request->get('address_floor');
+        $address_entrance = $request->get('address_entrance');
+        $address_house = $request->get('address_house');
+        $address_street = $request->get('address_street');
+        $address_zip = $request->get('address_zip');
+        $address_city = $request->get('address_city');
+
+        $user_own_id = Auth::user() != null ? Auth::user()->id : null;
+
+        $guest_ip = '';
+        $guest_useragent = '';
+//        $guest_language = '';
+
+        $cart = session('cart');
+
+        if( !empty($cart) ) {
+
+            if( isset($cart['guest']) ) {
+                $guest_ip = $cart['guest']['ip'];
+                $guest_useragent = $cart['guest']['user_agent'];
+    //            $guest_language = $cart['guest']['language'];
+            }
+
+
+            $uuid = Uuid::generate()->string;
+
+            //todo перенести логику создания заказа в OrderController?
+
+            $order = new Order([
+                'user_own_id' => $user_own_id,
+
+                'uuid' => $uuid,
+
+                'address_city' => $address_city,
+                'address_zip' => $address_zip,
+                'address_street' => $address_street,
+                'address_house' => $address_house,
+                'address_entrance' => $address_entrance,
+                'address_floor' => $address_floor,
+                'address_apart' => $address_apartment,
+
+                'address_np_number' => $address_np_number,
+
+                'client_first_name' => $name_first,
+                'client_last_name' => $name_last,
+                'client_patronymic_name' => $name_patronymic,
+
+                'client_phone' => $contact_phone,
+                'client_email' => $contact_email,
+                'comment' => $order_comment,
+
+                'guest_ip' => $guest_ip,
+                'guest_useragent' => $guest_useragent,
+            ]);
+
+
+            $order->save();
+
+
+            if( isset($cart['products']) ) {
+                $arrayOrderProducts = [];
+
+                foreach ($cart['products'] as $product) {
+                    $arrayOrderProducts[] = [
+                        'order_id' => $order->id, // может все таки uuid?
+                        'product_id' => $product['id'], // может все таки uuid?
+                        'quantity' => $product['quantity'],
+                        'price' => $product['price'],
+                    ];
+                }
+            }
+
+            if (count($arrayOrderProducts) > 0) {
+                foreach ($arrayOrderProducts as $orderProduct) {
+                    Order::createReferenceOrderWithProduct($orderProduct);
+                }
+            }
+        }
 
 
 
 
+
+
+
+
+        // не получается через with, он просто не работает, значит используем сессию пока вручную
+        // так же требуется очистка, при загрузке страницы
+        session()->put('status', 'Order created!');
+
+        return redirect()
+            ->route('cart.checkout', []);
+//            ->with('success', 'Order created!');
+
+    }
+
+
+
+    /**
+     * Other methods
+     */
 
     /**
      * Создаем Корзину если ее нет
@@ -354,6 +585,10 @@ class CartsController extends Controller
 
         return $cart;
     }
+
+
+
+
 
 
 

@@ -14,7 +14,7 @@ class ProductPhotos extends Model
 
     protected $fillable = [
         'uuid',
-        'product_id',
+        'product_uuid',
         'index',
         'file_name',
         'user_own_id',
@@ -29,11 +29,11 @@ class ProductPhotos extends Model
      * @return \Illuminate\Support\Collection
      * Получить максимальный индекс/позицию по данному продукту
      */
-    public static function getMaxIndex($product_id)
+    public static function getMaxIndex($product_uuid)
     { // : array
 
         return DB::table('product_photos as pp')
-            ->where('pp.product_id', '=', $product_id)
+            ->where('pp.product_uuid', '=', $product_uuid)
             ->get()
             ->max('index');
     }
@@ -46,14 +46,13 @@ class ProductPhotos extends Model
     {
 
         $complaints = DB::table('product_photos as pp')
-            ->join('products as p', 'pp.product_id', '=', 'p.id')
+            ->join('products as p', 'pp.product_uuid', '=', 'p.uuid')
 
 //            ->where('ic.instruction_id', '=', $instructionId)
             ->select(
                 // фотография
-                'pp.id as id',
                 'pp.uuid as uuid',
-                'pp.product_id as product_id',
+                'pp.product_uuid as product_uuid',
                 'pp.index as index',
                 'pp.file_name as file_name',
                 'pp.user_own_id as user_own_id',
@@ -78,18 +77,15 @@ class ProductPhotos extends Model
      * @return \Illuminate\Support\Collection
      * Получить все фотографии по продукту по его id (не uuid)
      */
-    public static function getProductPhotosByProductId($product_id)
+    public static function getProductPhotosByProductId($product_uuid)
     {
 
         $complaints = DB::table('product_photos as pp')
-//            ->join('products as p', 'pp.product_id', '=', 'p.id')
-
-            ->where('pp.product_id', '=', $product_id)
+            ->where('pp.product_uuid', '=', $product_uuid)
             ->select(
             // фотография
-                'pp.id as id',
                 'pp.uuid as uuid',
-                'pp.product_id as product_id',
+                'pp.product_uuid as product_uuid',
                 'pp.index as index',
                 'pp.file_name as file_name',
                 'pp.user_own_id as user_own_id',
@@ -114,19 +110,15 @@ class ProductPhotos extends Model
      * @return \Illuminate\Support\Collection
      * Получить одну главную фотографию по продукту по его id (не uuid)
      */
-    public static function getProductPhotoByProductId($product_id)
+    public static function getProductPhotoByProductId($product_uuid)
     {
 
         $complaints = DB::table('product_photos as pp')
-//            ->join('products as p', 'pp.product_id', '=', 'p.id')
-
-            ->where('pp.product_id', '=', $product_id)
-//            ->where('pp.index', '=', 0)
+            ->where('pp.product_uuid', '=', $product_uuid)
             ->select(
             // фотография
-                'pp.id as id',
                 'pp.uuid as uuid',
-                'pp.product_id as product_id',
+                'pp.product_uuid as product_uuid',
                 'pp.index as index',
                 'pp.file_name as file_name',
                 'pp.user_own_id as user_own_id',

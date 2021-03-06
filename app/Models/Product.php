@@ -14,13 +14,12 @@ class Product extends Model
 
 
     protected $fillable = [
+        'uuid',
         'article_number', // sku?
         'price',
-        'tax',
         'quantity',
         'category_id',
         'user_own_id',
-        'uuid',
         'slug',
         'title',
         'title_ua',
@@ -43,19 +42,17 @@ class Product extends Model
             //->join('product_photos as ph', 'p.id', '=', 'ph.product_id') // array
             ->leftJoin('product_categories as c', 'p.category_id', '=', 'c.id')
 
-            ->leftJoin('status_product as sp', 'p.id', '=', 'sp.product_id') // связующая
+            ->leftJoin('status_product as sp', 'p.uuid', '=', 'sp.product_uuid') // связующая
             ->leftJoin('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
 
             ->select(
                 // продукт
-                'p.id as id',
+                'p.uuid as uuid',
                 'p.article_number as article_number',
                 'p.price as price',
-                'p.tax as tax',
                 'p.quantity as quantity',
                 'p.category_id as category_id',
                 'p.user_own_id as user_own_id',
-                'p.uuid as uuid',
                 'p.title as title',
                 'p.title_ua as title_ua',
                 'p.title_ru as title_ru',
@@ -93,24 +90,18 @@ class Product extends Model
      */
     public static function getProduct($uuid)  { // : array
         return DB::table('products as p')
-            //->join('product_photos as ph', 'p.id', '=', 'ph.product_id') // array
             ->leftJoin('product_categories as c', 'p.category_id', '=', 'c.id')
-
-            ->leftJoin('status_product as sp', 'p.id', '=', 'sp.product_id') // связующая
+            ->leftJoin('status_product as sp', 'p.uuid', '=', 'sp.product_uuid') // связующая
             ->leftJoin('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
-
             ->where('p.uuid', '=', $uuid)
-
             ->select([
                 // продукт
-                'p.id as id',
+                'p.uuid as uuid',
                 'p.article_number as article_number',
                 'p.price as price',
-                'p.tax as tax',
                 'p.quantity as quantity',
                 'p.category_id as category_id',
                 'p.user_own_id as user_own_id',
-                'p.uuid as uuid',
                 'p.title as title',
                 'p.title_ua as title_ua',
                 'p.title_ru as title_ru',
@@ -140,7 +131,6 @@ class Product extends Model
             //->pluck('id') //->toArray();
             ->get()
             ->first();
-//            ->first();
     }
 
 

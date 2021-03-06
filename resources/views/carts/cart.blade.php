@@ -4,19 +4,7 @@
     <div class="row">
         <div class="col-12">
             <h1 class="display-3">Cart</h1>
-
-            <div class="row">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="col">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <br />
-                @endif
-            </div>
+            @include('layouts.parts._flash-message')
 
             <div class="row">
                 <div class="col-12">

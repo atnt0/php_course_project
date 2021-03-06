@@ -15,19 +15,20 @@ class CreateProductsTable extends Migration
     {
         if ( !Schema::hasTable('products') ) {
             Schema::create('products', function (Blueprint $table) {
-                $table->id();
+//                $table->id();
+
+                $table->string('uuid', 36)->unique()->nullable(false)->default('');
 
                 $table->string('article_number');
 
                 $table->bigInteger('price')->unsigned()->default(0); // умножение на 10 тысяч
-                $table->bigInteger('tax')->unsigned()->default(0);
+//                $table->bigInteger('tax')->unsigned()->default(0);
                 $table->bigInteger('quantity')->unsigned()->default(0); // ->nullable() // _in_stock // количество на складе
 
                 $table->unsignedBigInteger('category_id');
 
                 $table->bigInteger('user_own_id')->unsigned();
 
-                $table->string('uuid', 36)->unique()->nullable(false);
                 $table->string('slug', 255)->nullable(false);
 
                 $table->string('title', 255)->default('');

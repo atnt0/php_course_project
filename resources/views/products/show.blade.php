@@ -16,27 +16,9 @@
                 <br />
             @endif
 
-{{--            @if (Auth::guest())--}}
-{{--                Only registred users can be use this function.--}}
-{{--            @else--}}
-{{--                <a href="{{ route('product.complaints.createForProductId', ['productId' => $product->id]) }}"--}}
-{{--                   class="btn btn-primary">Add complaint</a>--}}
-{{--            @endif--}}
-
-{{--            @if( \Illuminate\Support\Facades\Auth::user() != null && \Illuminate\Support\Facades\Auth::user()->hasRole('admin') )--}}
-{{--                <a href="{{ route('product.complaints.indexComplaintsForProduct', ['productId' => $product->id]) }}"--}}
-{{--                   class="btn btn-primary" title="All complaints for Product">All Complaints</a>--}}
-{{--            @endif--}}
-
-            <br>
 
             <div class="row">
                 <div class="col col-12">
-
-{{--                    <div class="row">--}}
-{{--                        <div class="col-4 text-right"><b>ID:</b></div>--}}
-{{--                        <div class="col-8">{{ $product->id }}</div>--}}
-{{--                    </div>--}}
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Title ru:</b></div>
@@ -56,21 +38,6 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-2 text-right"><b>Price:</b></div>
-                        <div class="col-10"><b>{{ $dataProduct['price_float'] }} ₴</b></div>
-                    </div>
-
-{{--                    <div class="row">--}}
-{{--                        <div class="col-2 text-right"><b>Created at:</b></div>--}}
-{{--                        <div class="col-10">{{ $product->created_at }}</div>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="row">--}}
-{{--                        <div class="col-2 text-right"><b>Updated at:</b></div>--}}
-{{--                        <div class="col-10">{{ $product->updated_at }}</div>--}}
-{{--                    </div>--}}
-
-                    <div class="row">
                         <div class="col-2 text-right"><b>Photos:</b></div>
                         <div class="col-10">
                             <ul style="list-style: none; padding: 0;">
@@ -87,6 +54,11 @@
                     </div>
                     <br>
 
+
+                    <div class="row">
+                        <div class="col-2 text-right"><b>Price:</b></div>
+                        <div class="col-10"><b>{{ $dataProduct['price_float'] }} ₴</b></div>
+                    </div>
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Quantity in stock:</b></div>

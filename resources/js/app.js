@@ -14,6 +14,8 @@ import 'jquery-ui/ui/widgets/sortable.js';
 // here add as many widget as you may need
 //-----------------------------------------------
 
+
+// connect project js-files
 require('./connectjs');
 
 

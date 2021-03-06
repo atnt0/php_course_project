@@ -26,27 +26,6 @@ class OrdersController extends Controller
         return view('orders.index', compact('orders', ));
     }
 
-//    /**
-//     * Show the form for creating a new resource.
-//     *
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function create()
-//    {
-//        //
-//    }
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -58,21 +37,9 @@ class OrdersController extends Controller
     {
         $order = Order::where('uuid', '=', $uuid)->firstOrFail(); //->get();
 
-//        $order2 = Order::find(1);
-
-//        $products = $order->products();
-//
-//        $arr = [];
-//        foreach ($order2->products as $product) {
-//            $arr[] = $product;
-//        }
-
         $products = $order->getProducts(); //TODO заменить на вызом через ссылки "morphToMany"
 
         $dataProducts = [];
-
-//        dd($products);
-
         $dataOrder = [];
 
         $userOwn = User::find($order->user_own_id);
@@ -83,40 +50,28 @@ class OrdersController extends Controller
         if( count($products) > 0 )
         {
             foreach ($products as $key => $product) {
-                $price_float = round($product->price / ProductsController::PRODUCT_MONEY_FIX_NUMBER, 2);
 
                 $user_own = User::find($product->user_own_id);
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
-                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)
+                $productPhoto = ProductPhotos::where('product_uuid', '=', $product->uuid)
                     ->orderBy('index', 'asc')->first(); //->firstOrFail(); // - выдает ошибку
 
-                if( !empty($productPhoto) ){
-//                    $tmpProductPhoto = $productPhoto->toArray();
+                $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
-                    //TODO перенести в отдельный метод
-                    $dataProductPhoto = [
-                        'uuid' => $productPhoto['uuid'],
-                        'description_ru' => $productPhoto['description_ru'],
-                        'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto['file_name'],
-                    ];
-                }
-                else
-                {
-                    //TODO перенести в отдельный метод
-                    $dataProductPhoto = [
-                        'uuid' => '',
-                        'description_ru' => 'not_found_image',
-                        'link' => 'not_found_image',
-                    ];
-                }
 
-                $price_total = $product->op_quantity * $price_float;
-                $dataOrder['total_price'] += $price_total;
+                $price_float = ProductsController::toPriceForDisplay($product->price);
+                $price_total = $product->op_quantity * $product->price;
+                $price_multi_float = ProductsController::toPriceForDisplay($price_total);
+
+                $total_price = (int) $dataOrder['total_price'] + (int) $price_total;
+                $total_price_float = ProductsController::toPriceForDisplay($total_price);
+                $dataOrder['total_price'] = $total_price;
+                $dataOrder['total_price_float'] = $total_price_float;
 
                 $dataProducts[$key] = [
                     'price_float' => $price_float,
-                    'price_total' => $price_total,
+                    'price_multi_float' => $price_multi_float,
 
                     'photo_main' => $dataProductPhoto,
                     //TODO может перенести в user?
@@ -128,8 +83,6 @@ class OrdersController extends Controller
                 ];
             }
         }
-
-
 
         return view('orders.show', compact('order', 'dataOrder', 'products', 'dataProducts', ));
     }
@@ -167,17 +120,6 @@ class OrdersController extends Controller
     {
         //
     }
-
-
-    /**
-     * Create fake-order for tests
-     */
-    public function createFakeOrder()
-    {
-
-
-    }
-
 
 
 

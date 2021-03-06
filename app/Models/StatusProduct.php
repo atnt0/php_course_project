@@ -12,12 +12,8 @@ class StatusProduct extends Model
 
     protected $table = 'product_statuses';
 
-    //TODO стоит изменить название на множественное число, чтобы не путаться со связывающей таблицей + у StatusOrder
-
+    //todo может удалить, не используется?
     /**
-     * @param $product_id
-     * @param $status_id
-     * @return bool
      * Метод создает запись связывающую продукт со статусом, тем самым меняя статус продукта
      */
     public static function createManyToManyWithStatus(int $product_id, int $status_id) : bool {
@@ -32,4 +28,24 @@ class StatusProduct extends Model
                 'updated_at' => $dateTimeNow,
             ]);
     }
+
+
+
+
+    public static function createReferenceStatusWithProduct(array $statusProduct)
+    {
+        $dateTimeNow = date('Y-m-d H:i');
+
+        DB::table('status_product')
+            ->insert([
+                'product_uuid' => $statusProduct['product_uuid'],
+                'status_id' => $statusProduct['status_id'],
+                'created_at' => $dateTimeNow,
+                'updated_at' => $dateTimeNow,
+            ]);
+    }
+
+
+
+
 }

@@ -16,6 +16,7 @@ class CreateProductStatusesTable extends Migration
         if (!Schema::hasTable('product_statuses')) {
             Schema::create('product_statuses', function (Blueprint $table) {
                 $table->id();
+
                 $table->string('name', 32); // внутреннее имя
 
                 $table->string('title', 64);

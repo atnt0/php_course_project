@@ -14,13 +14,11 @@ class CreateProductPhotosTable extends Migration
     public function up()
     {
         Schema::create('product_photos', function (Blueprint $table) {
-            $table->id();
+            $table->string('uuid', 36)->unique()->nullable(false)->default('');
 
-            $table->string('uuid', 36)->unique();
+            $table->string('product_uuid', 36);
 
-            $table->bigInteger('product_id')->unsigned();
-
-            $table->integer('index')->unsigned(); // порядковый номер, 0 - первое, отображается как главное изображение
+            $table->TinyInteger('index')->unsigned();; // порядковый номер, 0 - первое, отображается как главное изображение
 
             $table->string('file_name');
 
@@ -30,7 +28,7 @@ class CreateProductPhotosTable extends Migration
             $table->string('description_ua', 255)->default('');
             $table->string('description_ru', 255)->default('');
 
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_uuid')->references('uuid')->on('products');
 
             $table->timestamps();
         });
@@ -44,7 +42,7 @@ class CreateProductPhotosTable extends Migration
     public function down()
     {
         Schema::table('product_photos', function (Blueprint $table) {
-            $table->dropForeign(['product_id']);
+            $table->dropForeign(['product_uuid']);
         });
         Schema::dropIfExists('product_photos');
     }

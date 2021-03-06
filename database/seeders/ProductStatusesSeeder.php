@@ -62,6 +62,7 @@ class ProductStatusesSeeder extends Seeder
 
                 if( !$statusFound ) {
                     $newStatus = new StatusProduct();
+
                     $newStatus->id = $status['id'];
                     $newStatus->name = $status['name'];
                     $newStatus->title = $status['title'];

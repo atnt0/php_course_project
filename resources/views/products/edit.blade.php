@@ -4,17 +4,7 @@
     <div class="row">
         <div class="col-12">
             <h1 class="display-3">Edit a Product</h1>
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <br />
-            @endif
+            @include('layouts.parts._flash-message')
 
             <form method="post" action="{{ route('product.update', $product->uuid) }}">
                 @method('PATCH')

@@ -16,10 +16,11 @@ class CreateStatusProductTable extends Migration
         if (!Schema::hasTable('status_product')) {
             Schema::create('status_product', function (Blueprint $table) {
                 $table->id();
-                $table->bigInteger('product_id')->unsigned();
+
+                $table->string('product_uuid', 36);
                 $table->bigInteger('status_id')->unsigned();
 
-                $table->foreign('product_id')->references('id')->on('products');
+                $table->foreign('product_uuid')->references('uuid')->on('products');
                 $table->foreign('status_id')->references('id')->on('product_statuses');
 
                 $table->timestamps();
@@ -35,7 +36,7 @@ class CreateStatusProductTable extends Migration
     public function down()
     {
         Schema::table('status_product', function (Blueprint $table) {
-            $table->dropForeign(['product_id']);
+            $table->dropForeign(['product_uuid']);
             $table->dropForeign(['status_id']);
         });
         Schema::dropIfExists('status_product');

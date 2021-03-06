@@ -1893,6 +1893,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); //-------
 window.$ = window.jQuery = (jquery__WEBPACK_IMPORTED_MODULE_0___default());
  // here add as many widget as you may need
 //-----------------------------------------------
+// connect project js-files
 
 __webpack_require__(/*! ./connectjs */ "./resources/js/connectjs.js");
 
@@ -2130,16 +2131,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 $(document).ready(function () {
   $('.container').on('click', '[data-submit="checkout"]', function (event) {
+    return;
     event.preventDefault();
-    var el = $(this); // console.log('el: ', el);
+    var el = $(this);
+
+    var _token_input = $('[name="_token"]');
 
     var form = el.parents('form');
-    console.log('form: ', form);
     var formElem = form.get(0);
-    console.log('formElem: ', formElem);
-    var formData = new FormData(formElem); // console.log('formData.entries(): ', formData.entries() );
-    // console.log('formData.keys(): ', formData.keys() );
-    // console.log('formData.values(): ', formData.values() );
+    var action = form.attr('action');
+
+    var _token = _token_input.val();
+
+    var formData = new FormData(formElem); // formData.append('_token', _token);
 
     var _iterator = _createForOfIteratorHelper(formData.entries()),
         _step;
@@ -2147,13 +2151,30 @@ $(document).ready(function () {
     try {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var pair = _step.value;
-        console.log(pair[0] + ', ' + pair[1]);
+        console.log(pair[0] + ' => ' + pair[1]);
       }
     } catch (err) {
       _iterator.e(err);
     } finally {
       _iterator.f();
     }
+
+    $.ajax({
+      type: 'POST',
+      url: action,
+      data: formData,
+      processData: false,
+      contentType: false,
+      statusCode: {
+        419: function _(eee) {
+          alert('Try again');
+          console.log('Try again', eee);
+        }
+      },
+      success: function success(data) {
+        console.log('data: ', data);
+      }
+    });
   });
 });
 

@@ -17,48 +17,14 @@ class StatusProductSeeder extends Seeder
     public function run()
     {
         $arrayStatusProducts = [
-            [
-                'product_id' => 1,
-                'status_id' => 1,
-            ],
-            [
-                'product_id' => 2,
-                'status_id' => 3,
-            ],
-            [
-                'product_id' => 5,
-                'status_id' => 5,
-            ],
+            ['status_id' => 1, 'product_uuid' => 'fcce115b-4dd8-4a8f-82eb-3269be968b2a',],
+            ['status_id' => 3, 'product_uuid' => '57e72b99-19fe-49f3-8c78-aa65a5297541',],
+            ['status_id' => 5, 'product_uuid' => 'ba4e0e20-7c29-11eb-bfe1-31f78429e044',],
         ];
 
         if( count($arrayStatusProducts) > 0 ) {
-//            $dateTimeNow = date('YYYY-MM-DD hh:mm:ss'); // MySql format date time
-            $dateTimeNow = date('Y-m-d H:i');
-
             foreach ($arrayStatusProducts as $statusProduct) {
-
-
-//                $productFound = DB::table('products as p')
-//                    ->where('p.id', '=', $statusProduct['product_id'])->first();
-//
-//                if( $productFound )
-//                {
-//                    $statusProductFound = DB::table('status_product as sp')
-//                        ->where('sp.status_id', '=', $statusProduct['status_id'])->first();
-
-//                    if( !$statusProductFound )
-//                    {
-                        //$statusProductDisplay = StatusProduct::where('id', '=', $statusProduct['status_id'])->first();
-
-                        DB::table('status_product')
-                            ->insert([
-                                'product_id' => $statusProduct['product_id'],
-                                'status_id' => $statusProduct['status_id'],
-                                'created_at' => $dateTimeNow,
-                                'updated_at' => $dateTimeNow,
-                            ]);
-//                    }
-//                }
+                StatusProduct::createReferenceStatusWithProduct($statusProduct);
             }
         }
 

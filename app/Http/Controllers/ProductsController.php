@@ -30,13 +30,8 @@ class ProductsController extends Controller
         //$products = Product::all();
         $products = Product::getProducts();
 
-        if( empty($products) ){
-
-            dd([
-                'abort404' => 'here',
-            ]);
+        if( empty($products) )
             abort(404);
-        }
 
         $dataProducts = [[]];
 
@@ -47,33 +42,12 @@ class ProductsController extends Controller
             foreach ($products as $key => $product) {
                 $price_float = self::toPriceForDisplay($product->price);
 
-
                 $user_own = User::find($product->user_own_id);
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
-//                $productPhoto = ProductPhotos::getProductPhotoByProductId($product->id)->first();
-                $productPhoto = ProductPhotos::where('product_id', '=', $product->id)
+                $productPhoto = ProductPhotos::where('product_uuid', '=', $product->uuid)
                     ->orderBy('index', 'asc')->first(); //->firstOrFail(); // - выдает ошибку
-
-                if( !empty($productPhoto) ){
-//                    $tmpProductPhoto = $productPhoto->toArray();
-
-                    //TODO перенести в отдельный метод
-                    $dataProductPhoto = [
-                        'uuid' => $productPhoto['uuid'],
-                        'description_ru' => $productPhoto['description_ru'],
-                        'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto['file_name'],
-                    ];
-                }
-                else
-                    {
-                    //TODO перенести в отдельный метод
-                    $dataProductPhoto = [
-                        'uuid' => '',
-                        'description_ru' => 'not_found_image',
-                        'link' => 'not_found_image',
-                    ];
-                }
+                $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
                 $dataProducts[$key] = [
                     'price_float' => $price_float,
@@ -85,18 +59,11 @@ class ProductsController extends Controller
                         'you' => $user_own_you, // " [id: ". $user_own->id ."]"
                     ],
                 ];
-//                dd([
-//                    'product_id' => $product->id,
-//                    '$tmpProductPhoto' => $tmpProductPhoto,
-//                    '$dataProductPhoto' => $dataProductPhoto,
-//                ]);
             }
         }
 
         // получить список тегов продукта
         // получить список фотографий продукта в сортированном виде по порядку
-
-
 
         return view('products.index', compact('products', 'dataProducts'));
     }
@@ -123,11 +90,8 @@ class ProductsController extends Controller
             'title_ru' => 'required|min:4',
             'description_ru' => 'required|min:10',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-//            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'quantity' => 'required|integer', // unsigned
         ]);
-
-        //$rr = self::PRODUCT_DEFAULT_STATUS_ID;
 
         $toSlugTransLit = Transliteration::clean_filename($request->get('title_ru'));
 
@@ -153,13 +117,12 @@ class ProductsController extends Controller
         $uuidNew  = Uuid::generate()->string;
 
         $product = new Product([
+            'uuid' => $uuidNew,
             'article_number' => 0, //TODO придумать как генерировать уникальный артикул
             'price' => $price,
-            'tax' => $tax,
             'quantity' => $quantity,
             'category_id' => $category_id,
             'user_own_id' => $user_own_id,
-            'uuid' => $uuidNew,
             'slug' => $toSlugTransLit,
             'title_ru' => $title_ru,
             'description_ru' => $description_ru,
@@ -175,7 +138,8 @@ class ProductsController extends Controller
 
         if( !empty($defaultStatus) )
         {
-            StatusProduct::createManyToManyWithStatus($product->id, $defaultStatus->id);
+//            StatusProduct::createManyToManyWithStatus($product->uuid, $defaultStatus->id);
+            StatusProduct::createReferenceStatusWithProduct([ 'product_uuid' => $product->uuid, 'status_id' => $defaultStatus->id ]);
         }
 
 
@@ -195,34 +159,18 @@ class ProductsController extends Controller
     public function show($uuid)
     {
         $product = Product::getProduct($uuid);
-//        dd($product);
 
         if( empty($product) )
             abort(404);
 
-        $productPhotos = ProductPhotos::getProductPhotoByProductId($product->id); // + product_uuid
-//        dd($productPhotos);
-//        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->get();
+        $productPhotos = ProductPhotos::getProductPhotoByProductId($product->uuid);
 
         $price_float = self::toPriceForDisplay($product->price);
-        $tax_float = self::toPriceForDisplay($product->tax);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
-        $dataProductPhotos = [];
-
-        //TODO перенести в отдельный метод
-        if( count($productPhotos) > 0 )
-        {
-            foreach ($productPhotos as $key => $productPhoto) {
-                $dataProductPhotos[$key] = [
-                    'uuid' => $productPhoto->uuid,
-                    'description_ru' => $productPhoto->description_ru,
-                    'link' => ProductPhotosController::PRODUCT_PHOTO_PUBLIC_DIRECTORY .'/'. $productPhoto->file_name,
-                ];
-            }
-        }
+        $dataProductPhotos = ProductPhotosController::getPreDataForPhotos($productPhotos);
 
         $dataProduct = [
             'price_float' => $price_float,
@@ -253,7 +201,6 @@ class ProductsController extends Controller
             abort(404);
 
         $price_float = self::toPriceForDisplay($product->price);
-        $tax_float = self::toPriceForDisplay($product->tax);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
@@ -294,17 +241,15 @@ class ProductsController extends Controller
         if( empty($product) )
             abort(404);
 
+        $price = $request->get('price');
+        $quantity = $request->get('quantity');
         $title_ru = $request->get('title_ru');
         $description_ru = $request->get('description_ru');
-        $price = $request->get('price');
-        $tax = $request->get('tax');
-        $quantity = $request->get('quantity');
 
+        $product->price = self::toPriceForDB($price);
+        $product->quantity = $quantity;
         $product->title_ru = $title_ru;
         $product->description_ru = $description_ru;
-        $product->price = self::toPriceForDB($price);
-        $product->tax = self::toPriceForDB($tax);
-        $product->quantity = $quantity;
 
         $product->save();
 

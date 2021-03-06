@@ -21,10 +21,10 @@
             <div class="row">
                 <div class="col col-12">
 
-                    <div class="row">
-                        <div class="col-2 text-right"><b>ID:</b></div>
-                        <div class="col-10">{{ $order->id }}</div>
-                    </div>
+{{--                    <div class="row">--}}
+{{--                        <div class="col-2 text-right"><b>ID:</b></div>--}}
+{{--                        <div class="col-10">{{ $order->id }}</div>--}}
+{{--                    </div>--}}
 
                     <div class="row">
                         <div class="col-2 text-right"><b>UUID:</b></div>
@@ -47,19 +47,20 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-2 text-right"><b>Comment:</b></div>
-                        <div class="col-10">{{ $order->comment }}</div>
+                        <div class="col-2 text-right"><b>Phone:</b></div>
+                        <div class="col-10">{{ $order->client_phone }}</div>
                     </div>
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Email:</b></div>
-                        <div class="col-10">{{ $order->email }}</div>
+                        <div class="col-10">{{ $order->client_email }}</div>
                     </div>
 
                     <div class="row">
-                        <div class="col-2 text-right"><b>Phone:</b></div>
-                        <div class="col-10">{{ $order->phone }}</div>
+                        <div class="col-2 text-right"><b>Comment:</b></div>
+                        <div class="col-10">{{ $order->comment }}</div>
                     </div>
+
 
                     <div class="row">
                         <div class="col-2 text-right"><b>Address:</b></div>
@@ -140,7 +141,7 @@
                                             <b>{{ $dataProducts[$key]['price_float'] }} ₴</b>
                                         </td>
                                         <td class="text-right">
-                                            <b>{{ $dataProducts[$key]['price_total'] }} ₴</b>
+                                            <b>{{ $dataProducts[$key]['price_multi_float'] }} ₴</b>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -153,7 +154,7 @@
                                     <td></td>
                                     <td></td>
                                     <td class="text-right">
-                                        <b>{{ $dataOrder['total_price'] }} ₴</b>
+                                        <b>{{ $dataOrder['total_price_float'] }} ₴</b>
                                     </td>
                                 </tr>
                                 </tfoot>

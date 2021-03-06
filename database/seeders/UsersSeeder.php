@@ -46,7 +46,8 @@ class UsersSeeder extends Seeder
 
         if( count($arrayUsers) > 0 ){
             foreach ($arrayUsers as $user) {
-                $userFound = DB::table('users')->where('email', '=', $user['email'])->first();
+                $userFound = DB::table('users')
+                    ->where('email', '=', $user['email'])->first();
                 if( !$userFound ) {
                     $admin = new User();
                     $admin->name = $user['name'];

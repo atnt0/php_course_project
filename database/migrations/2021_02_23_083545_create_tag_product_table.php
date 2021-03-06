@@ -16,10 +16,11 @@ class CreateTagProductTable extends Migration
         if (!Schema::hasTable('tag_product')) {
             Schema::create('tag_product', function (Blueprint $table) {
                 $table->id();
-                $table->bigInteger('product_id')->unsigned();
+
+                $table->string('product_uuid', 36);
                 $table->bigInteger('tag_id')->unsigned();
 
-                $table->foreign('product_id')->references('id')->on('products');
+                $table->foreign('product_uuid')->references('uuid')->on('products');
                 $table->foreign('tag_id')->references('id')->on('product_tags');
 
                 //$table->timestamp = false;
@@ -36,7 +37,7 @@ class CreateTagProductTable extends Migration
     public function down()
     {
         Schema::table('tag_product', function (Blueprint $table) {
-            $table->dropForeign(['product_id']);
+            $table->dropForeign(['product_uuid']);
             $table->dropForeign(['tag_id']);
         });
         Schema::dropIfExists('tag_product');

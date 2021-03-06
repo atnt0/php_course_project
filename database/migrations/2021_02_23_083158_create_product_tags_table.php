@@ -16,6 +16,7 @@ class CreateProductTagsTable extends Migration
         if (!Schema::hasTable('product_tags')) {
             Schema::create('product_tags', function (Blueprint $table) {
                 $table->id();
+
                 $table->string('title', 255);
                 $table->string('title_ua', 255);
                 $table->string('title_ru', 255);

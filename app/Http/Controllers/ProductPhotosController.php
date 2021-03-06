@@ -119,7 +119,8 @@ class ProductPhotosController extends Controller
         if( empty($productPhoto) )
             abort(404);
 
-        $product = Product::where('id', '=',  $productPhoto->product_id )->firstOrFail();
+        $product = Product::where('uuid', '=',  $productPhoto->product_uuid )->firstOrFail();
+
         $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
         return view('productphotos.edit', compact('productPhoto', 'dataProductPhoto', 'product'));
@@ -167,7 +168,7 @@ class ProductPhotosController extends Controller
         if( empty($productPhoto) )
             abort(404);
 
-        $product = Product::where('id', '=',  $productPhoto->product_id )->firstOrFail();
+        $product = Product::where('uuid', '=',  $productPhoto->product_uuid )->firstOrFail();
 
         $filePath = self::PRODUCT_PHOTO_SERVER_DIRECTORY .'/'. $productPhoto->file_name;
 
@@ -192,12 +193,13 @@ class ProductPhotosController extends Controller
      */
     public function editPositionsForProductByUuid($product_uuid)
     {
-        $product = Product::where('uuid', '=',  $product_uuid )->firstOrFail();
+        $product = Product::where('uuid', '=', $product_uuid)->firstOrFail();
 
         if( empty($product) )
             abort(404);
 
-        $productPhotos = ProductPhotos::where('product_id', '=', $product->id)->orderBy('index', 'asc')->get();
+        $productPhotos = ProductPhotos::where('product_uuid', '=', $product->uuid)
+            ->orderBy('index', 'asc')->get();
 
         if( empty($productPhotos) )
             abort(404);
@@ -235,11 +237,6 @@ class ProductPhotosController extends Controller
 
         $uuidPhotos = $request->get('photos');
 
-//        dd([
-//            'product_uuid' => $product_uuid,
-//            'photos' => $uuidPhotos,
-//        ]);
-
         if( count($uuidPhotos) > 0 )
         {
             $arr = [];
@@ -248,7 +245,6 @@ class ProductPhotosController extends Controller
             }
         }
 
-//        return 1;
     }
 
 
@@ -260,12 +256,17 @@ class ProductPhotosController extends Controller
     /**
      * Метод возвращает подготовленные к выводу на view данные по ОДНУ Фото
      */
-    public static function getPreDataForPhoto( $productPhoto) // ProductPhotos
+    public static function getPreDataForPhoto( $productPhoto) : array // ProductPhotos
     {
-        if( is_object($productPhoto) )
+        if( is_object($productPhoto) && get_class($productPhoto) == 'stdClass' ) {
             $productPhoto = (array) $productPhoto;
+        }
+        elseif( is_object($productPhoto) ) {
+            $productPhoto = $productPhoto->toArray();
+        }
 
         if( !empty($productPhoto) ) {
+
             return [
                 'uuid' => $productPhoto['uuid'],
                 'description_ru' => $productPhoto['description_ru'],
@@ -284,7 +285,7 @@ class ProductPhotosController extends Controller
     /**
      * Метод возвращает подготовленные к выводу на view данные по МАССИВУ Фото
      */
-    public static function getPreDataForPhotos( $productPhotos) //  ...
+    public static function getPreDataForPhotos( $productPhotos) : array //  ...
     {
         $dataProductPhotos = [];
 

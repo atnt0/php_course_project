@@ -42,8 +42,8 @@
             <table class="table table-striped" data-table="insert_here">
                 <thead>
                 <tr>
-                    <th>Index</th>
-                    <th>UUID</th>
+{{--                    <th>Index</th>--}}
+{{--                    <th>UUID</th>--}}
                     <th>Comment</th>
                     <th>Full name</th>
                     <th>Contacts</th>

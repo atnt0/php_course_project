@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Order;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,34 +17,18 @@ class OrderProductSeeder extends Seeder
     {
         $arrayOrderProducts = [
             [
-                'product_id' => 7,
-                'order_id' => 1,
+                'order_uuid' => '78c9db80-b18d-4aae-8355-dd301224a39f',
+                'product_uuid' => '2e9e14e3-9ccc-4cda-bee6-bfa7aedb2d23',
                 'price' => 12110000,
-                'tax' => 0,
-                'quantity' => 12,
+                'quantity' => 18,
             ],
         ];
 
         // for order_product
 
         if( count($arrayOrderProducts) > 0 ) {
-//            $dateTimeNow = date('YYYY-MM-DD hh:mm:ss'); // MySql format date time
-            $dateTimeNow = date('Y-m-d H:i');
-
             foreach ($arrayOrderProducts as $orderProduct) {
-                //TODO заменить на работу с моделью или репозиторием
-                DB::table('order_product')
-                    ->insert([
-                        'order_id' => $orderProduct['order_id'],
-                        'product_id' => $orderProduct['product_id'],
-
-                        'price' => $orderProduct['price'],
-                        'tax' => $orderProduct['tax'],
-                        'quantity' => $orderProduct['quantity'],
-
-                        'created_at' => $dateTimeNow,
-                        'updated_at' => $dateTimeNow,
-                    ]);
+                Order::createReferenceOrderWithProduct($orderProduct);
             }
         }
     }
