@@ -13,6 +13,7 @@ class ProductCategories extends Model
 
 
     protected $fillable = [
+        'slug',
         'title',
         'title_ua',
         'title_ru',
@@ -22,6 +23,10 @@ class ProductCategories extends Model
 //        'meta_keywords',
 //        'meta_description',
     ];
+
+
+
+//    public function
 
 
 }

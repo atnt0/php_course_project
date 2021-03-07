@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductCategories;
 use App\Models\ProductPhotos;
 use App\Models\StatusProduct;
 use App\Models\User;
@@ -97,19 +98,21 @@ class ProductsController extends Controller
             'description_ru' => 'required|min:10',
             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'quantity' => 'required|integer', // unsigned
+            'category_id' => 'integer', // unsigned
         ]);
 
-        $toSlugTransLit = Transliteration::clean_filename($request->get('title_ru'));
+        $title_ruRaw = $request->get('title_ru');
+        $toSlugTransLit = Transliteration::clean_filename($title_ruRaw);
+        //todo добавить проверку на уникальность
 
         $price = $request->get('price');
-        $tax = $request->get('tax');
 
         $price = self::toPriceForDB($price);
 
         $quantity = (int) $request->get('quantity');
 
         $category_id = (int) $request->get('category_id');
-        $category_id = 1;
+//        $category_id = 1;
 
         $user_own_id = Auth::user()->id;
 
@@ -215,20 +218,13 @@ class ProductsController extends Controller
         $allProductStatuses = StatusProduct::getAllProductStatuses()->toArray();
         $lastProductStatus = StatusProduct::getLastProductStatusByProduct($product->uuid)->first();
 
-//        dd([
-//            $allProductStatuses,
-//            $lastProductStatus
-//        ]);
-//        if( empty($lastProductStatus) )
-//            abort(404);
-
-
         /**
          * (array) и ->toArray() выполняют разные задачи
          * (array) - полностью преобразовывает объект к массиву - названия ключей в цвете
          * ->toArray() - только объект объектов в массив объектов - белые названия ключей
          */
 
+        //todo вынести в отдельный метод
         $productStatuses = [];
         if( count($allProductStatuses) > 0 ) {
             foreach ($allProductStatuses as $key => $status) {
@@ -237,6 +233,22 @@ class ProductsController extends Controller
                     'selected' => $selected,
                     'name' => $status->name,
                     'title_ru' => $status->title_ru,
+                ];
+            }
+        }
+
+        $allProductCategories = ProductCategories::all();
+
+        //todo вынести в отдельный метод
+        $productCategories = [];
+        if( count($allProductCategories) > 0 ) {
+            foreach ($allProductCategories as $key => $category) {
+                $selected = !empty($product->category_id) && $category->id == $product->category_id;
+                $productCategories[] = [
+                    'selected' => $selected,
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'title_ru' => $category->title_ru,
                 ];
             }
         }
@@ -250,6 +262,7 @@ class ProductsController extends Controller
                 'you' => $user_own_you, // " [id: ". $user_own->id ."]"
             ],
             'select_status' => $productStatuses,
+            'select_category' => $productCategories,
         ];
 
         return view('products.edit', compact('product', 'dataProduct'));
@@ -270,21 +283,28 @@ class ProductsController extends Controller
             'price' => 'required|regex:/^(\d+\.{0,1}\d{1,2})?$/',
             'quantity' => 'required|integer',
             'status' => 'regex:/^(\w+)$/',
+            'category_id' => 'integer|nullable',
         ]);
 
         $quantity = $request->get('quantity');
         $title_ru = $request->get('title_ru');
         $description_ru = $request->get('description_ru');
         $status = $request->get('status');
+        $category_id = $request->get('category_id') !== null ? (int) $request->get('category_id') : null;
 
         $priceRaw = $request->get('price');
         $priceWOS = self::removeSpaces($priceRaw);
         $priceFDB = self::toPriceForDB($priceWOS);
 
+        if( $category_id !== null)
+            $productCategoryNew = ProductCategories::where('id', '=', $category_id)->first();
+
         $product = Product::where('uuid', '=', $uuid)->first(); // firstOrFail
 
         if( empty($product) )
             abort(404);
+
+        $product->category_id = !empty($productCategoryNew) ? $productCategoryNew->id : null;
 
         $product->price = $priceFDB;
         $product->quantity = $quantity;

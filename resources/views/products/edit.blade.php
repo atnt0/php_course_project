@@ -1,17 +1,20 @@
 @extends('base')
 
+@section('title', $product->title_ru .' - '. 'Редактирование')
+
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Edit a Product</h1>
+{{--            <h1 class="display-3">Edit a Product</h1>--}}
+            <h2 class="display-5">{{ $product->title_ru }}</h2>
             @include('layouts.parts._flash-message')
 
-            <div class="buttons-item d-inline-block">
-                <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View</a>
-            </div>
-            <div class="buttons-item d-inline-block">
-                <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
-                   class="btn btn-primary">Edit photos</a>
+            <div class="row">
+                <div class="col">
+                    <a href="{{ route('product.show', [$product->uuid]) }}" class="btn btn-primary">View</a>
+                    <a href="{{ route('product.photo.editListForProduct', ['product_uuid' => $product->uuid]) }}"
+                       class="btn btn-primary">Edit photos</a>
+                </div>
             </div>
         </div>
     </div>
@@ -75,13 +78,25 @@
         </div>
 
         <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
-                    <label for="description_ru">Status:</label>
+                    <label for="status">Status:</label>
                     <select class="form-control" name="status" id="status">
                         @foreach($dataProduct['select_status'] as $k => $productStatus)
                             <option value="{{ $productStatus['name'] }}"{{ $productStatus['selected'] ? ' selected="selected"' : '' }}>
                                 {{ $productStatus['title_ru'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select class="form-control" name="category_id" id="category">
+                        <option value="">Not have a parent</option>
+                        @foreach($dataProduct['select_category'] as $k => $productCategory)
+                            <option value="{{ $productCategory['id'] }}"{{ $productCategory['selected'] ? ' selected="selected"' : '' }}>
+                                {{ $productCategory['title_ru'] }}</option>
                         @endforeach
                     </select>
                 </div>

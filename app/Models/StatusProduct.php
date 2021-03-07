@@ -48,11 +48,11 @@ class StatusProduct extends Model
             ->join('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
             ->where('sp.product_uuid', '=', $product_uuid)
             ->select(
-                '*',
+                '*', //todo заменить звездочку
                 'sp.created_at as sp_created_at',
                 'sp.updated_at as sp_updated_at',
             )
-//            ->orderBy('sp.created_at', 'desc') // desc
+            ->orderBy('sp.created_at', 'desc') // desc
 //            ->limit(1)
             ->get();
     }

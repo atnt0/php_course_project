@@ -1,9 +1,12 @@
 @extends('base')
 
+@section('title', 'Категории товаров')
+
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Product Categories</h1>
+{{--            <h1 class="display-3">Product Categories</h1>--}}
+            <h2 class="display-5">{{ 'Категории товаров' }}</h2>
             @include('layouts.parts._flash-message')
 
             <div class="row">

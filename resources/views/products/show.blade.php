@@ -1,9 +1,12 @@
 @extends('base')
 
+@section('title', $product->title_ru .' - '. 'Товар')
+
 @section('main')
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Show a Product</h1>
+{{--            <h1 class="display-3">Show a Product</h1>--}}
+            <h2 class="display-5">{{ $product->title_ru }}</h2>
             @include('layouts.parts._flash-message')
 
             <div class="row">
@@ -26,7 +29,7 @@
 
            <div class="row">
                <div class="col-2 text-right"><b>Category:</b></div>
-               <div class="col-10">{{ $product->category_title_ru }}</div>
+               <div class="col-10">{{ $product->category_title_ru ? $product->category_title_ru : 'Not have a parent' }}</div>
            </div>
 
            <div class="row">

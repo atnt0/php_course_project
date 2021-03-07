@@ -25,7 +25,7 @@ class CreateProductsTable extends Migration
 //                $table->bigInteger('tax')->unsigned()->default(0);
                 $table->bigInteger('quantity')->unsigned()->default(0); // ->nullable() // _in_stock // количество на складе
 
-                $table->unsignedBigInteger('category_id');
+                $table->unsignedBigInteger('category_id')->unsigned()->nullable();
 
                 $table->bigInteger('user_own_id')->unsigned();
 
