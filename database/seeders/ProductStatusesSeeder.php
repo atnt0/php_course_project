@@ -44,13 +44,13 @@ class ProductStatusesSeeder extends Seeder
                 'title_ua' => 'Не поставляється',
                 'title_ru' => 'Не поставляется',
             ],
-            [
-                'id' => 5,
-                'name' => 'outofstock',
-                'title' => 'Out of stock',
-                'title_ua' => 'Немає в наявності',
-                'title_ru' => 'Нет в наличии', // закончился, Распродано
-            ],
+//            [
+//                'id' => 5,
+//                'name' => 'outofstock',
+//                'title' => 'Out of stock',
+//                'title_ua' => 'Немає в наявності',
+//                'title_ru' => 'Нет в наличии', // закончился, Распродано
+//            ],
             // Є в наявності
             // Ожидается
         ];

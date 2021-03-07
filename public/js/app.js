@@ -1994,6 +1994,12 @@ if (checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-
   __webpack_require__(/*! ./scripts/product/show/addToCart */ "./resources/js/scripts/product/show/addToCart.js");
 
   __webpack_require__(/*! ./scripts/product/show/changeQuantity */ "./resources/js/scripts/product/show/changeQuantity.js");
+}
+
+if (checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\/edit$/i) || checkLocation('/product/create')) {
+  __webpack_require__(/*! ./scripts/product/checkInputPrices.js */ "./resources/js/scripts/product/checkInputPrices.js");
+
+  __webpack_require__(/*! ./scripts/product/show/changeQuantity */ "./resources/js/scripts/product/show/changeQuantity.js");
 } // if( window.location.pathname.match(new RegExp(/^\/cart$/i)) ) {
 
 
@@ -2213,6 +2219,20 @@ $(document).ready(function () {
 
 /***/ }),
 
+/***/ "./resources/js/scripts/product/checkInputPrices.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/scripts/product/checkInputPrices.js ***!
+  \**********************************************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  $('.container').on('keypress', '[name="price"]', function (event) {
+    return /\d/.test(String.fromCharCode(event.keyCode));
+  });
+});
+
+/***/ }),
+
 /***/ "./resources/js/scripts/product/show/addToCart.js":
 /*!********************************************************!*\
   !*** ./resources/js/scripts/product/show/addToCart.js ***!
@@ -2283,7 +2303,7 @@ $(document).ready(function () {
     event.preventDefault();
     var el = $(this);
     var parent = el.parents('.block_quantity');
-    var product_quantity_input = parent.find('[name="product_quantity"]');
+    var product_quantity_input = parent.find('[name="product_quantity"], [name="quantity"]');
     var down_product_quantity_btn = parent.find('[name="btn_down_quantity"]');
     var up_product_quantity_btn = parent.find('[name="btn_up_quantity"]');
     var oldVal = product_quantity_input.val();

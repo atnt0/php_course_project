@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use That0n3guy\Transliteration\Facades\Transliteration;
 use Webpatser\Uuid\Uuid;
+//use Illuminate\Support\Facades\Session as Session;
 
 class ProductsController extends Controller
 {
@@ -40,10 +41,14 @@ class ProductsController extends Controller
         //TODO разобрать на отдельные методы
         if( count($products) > 0 ) {
             foreach ($products as $key => $product) {
-                $price_float = self::toPriceForDisplay($product->price);
+                $price_float = self::toPriceForDisplay($product->price, true);
 
                 $user_own = User::find($product->user_own_id);
                 $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
+
+                $lastStatus = StatusProduct::getLastProductStatusByProduct($product->uuid)->first();
+
+//                dd($lastStatus);
 
                 $productPhoto = ProductPhotos::where('product_uuid', '=', $product->uuid)
                     ->orderBy('index', 'asc')->first(); //->firstOrFail(); // - выдает ошибку
@@ -52,6 +57,7 @@ class ProductsController extends Controller
                 $dataProducts[$key] = [
                     'price_float' => $price_float,
                     'photo_main' => $dataProductPhoto,
+                    'last_status' => $lastStatus,
                     //TODO может перенести в user?
                     'user_own' => [
                         'id' => $user_own->id,
@@ -99,7 +105,6 @@ class ProductsController extends Controller
         $tax = $request->get('tax');
 
         $price = self::toPriceForDB($price);
-        $tax = self::toPriceForDB($tax);
 
         $quantity = (int) $request->get('quantity');
 
@@ -111,7 +116,6 @@ class ProductsController extends Controller
         $title_ru = $request->get('title_ru');
 
         $description_ru = $request->get('description_ru');
-//        $description_ru = '';
 
 
         $uuidNew  = Uuid::generate()->string;
@@ -142,8 +146,6 @@ class ProductsController extends Controller
             StatusProduct::createReferenceStatusWithProduct([ 'product_uuid' => $product->uuid, 'status_id' => $defaultStatus->id ]);
         }
 
-
-
         return redirect()
             ->route('product.show', [$product->uuid])
             ->with('success', 'Product saved!');
@@ -165,14 +167,19 @@ class ProductsController extends Controller
 
         $productPhotos = ProductPhotos::getProductPhotoByProductId($product->uuid);
 
-        $price_float = self::toPriceForDisplay($product->price);
+        $price_float = self::toPriceForDisplay($product->price, true);
+
+        //todo вынести в отдельный метод по работе с textarea
+        $description_ru_float = mb_ereg_replace('\n', '<br>', $product->description_ru); // \r\n
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
         $dataProductPhotos = ProductPhotosController::getPreDataForPhotos($productPhotos);
 
+        // приставка float - значит обработанное или приведенное к тексту значение
         $dataProduct = [
+            'description_ru_float' => $description_ru_float,
             'price_float' => $price_float,
             'productPhotos' => $dataProductPhotos,
 //            'tax_float' => $tax_float,
@@ -195,25 +202,54 @@ class ProductsController extends Controller
      */
     public function edit($uuid)
     {
-        $product = Product::where('uuid', '=', $uuid)->firstOrFail();
+        $product = Product::where('uuid', '=', $uuid)->first(); //firstOrFail();
 
         if( empty($product) )
             abort(404);
 
-        $price_float = self::toPriceForDisplay($product->price);
+        $price_float = self::toPriceForDisplay($product->price, false);
 
         $user_own = User::find($product->user_own_id);
         $user_own_you = Auth::user() != null && $product->user_own_id == Auth::user()->id;
 
+        $allProductStatuses = StatusProduct::getAllProductStatuses()->toArray();
+        $lastProductStatus = StatusProduct::getLastProductStatusByProduct($product->uuid)->first();
+
+//        dd([
+//            $allProductStatuses,
+//            $lastProductStatus
+//        ]);
+//        if( empty($lastProductStatus) )
+//            abort(404);
+
+
+        /**
+         * (array) и ->toArray() выполняют разные задачи
+         * (array) - полностью преобразовывает объект к массиву - названия ключей в цвете
+         * ->toArray() - только объект объектов в массив объектов - белые названия ключей
+         */
+
+        $productStatuses = [];
+        if( count($allProductStatuses) > 0 ) {
+            foreach ($allProductStatuses as $key => $status) {
+                $selected = !empty($lastProductStatus) && $status->name == $lastProductStatus->name;
+                $productStatuses[] = [
+                    'selected' => $selected,
+                    'name' => $status->name,
+                    'title_ru' => $status->title_ru,
+                ];
+            }
+        }
+
         $dataProduct = [
             'price_float' => $price_float,
-//            'tax_float' => $tax_float,
             //TODO может перенести в user?
             'user_own' => [
                 'id' => $user_own->id,
                 'name' => $user_own->name,
                 'you' => $user_own_you, // " [id: ". $user_own->id ."]"
             ],
+            'select_status' => $productStatuses,
         ];
 
         return view('products.edit', compact('product', 'dataProduct'));
@@ -231,27 +267,37 @@ class ProductsController extends Controller
         $request->validate([
             'title_ru' => 'required|min:4',
             'description_ru' => 'required|min:10',
-            'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-//            'tax' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'price' => 'required|regex:/^(\d+\.{0,1}\d{1,2})?$/',
             'quantity' => 'required|integer',
+            'status' => 'regex:/^(\w+)$/',
         ]);
 
-        $product = Product::where('uuid', '=', $uuid)->firstOrFail();
+        $quantity = $request->get('quantity');
+        $title_ru = $request->get('title_ru');
+        $description_ru = $request->get('description_ru');
+        $status = $request->get('status');
+
+        $priceRaw = $request->get('price');
+        $priceWOS = self::removeSpaces($priceRaw);
+        $priceFDB = self::toPriceForDB($priceWOS);
+
+        $product = Product::where('uuid', '=', $uuid)->first(); // firstOrFail
 
         if( empty($product) )
             abort(404);
 
-        $price = $request->get('price');
-        $quantity = $request->get('quantity');
-        $title_ru = $request->get('title_ru');
-        $description_ru = $request->get('description_ru');
-
-        $product->price = self::toPriceForDB($price);
+        $product->price = $priceFDB;
         $product->quantity = $quantity;
         $product->title_ru = $title_ru;
         $product->description_ru = $description_ru;
 
         $product->save();
+
+        $statusNew = StatusProduct::where('name', '=', $status)->first();
+        $lastProductStatus = StatusProduct::getLastProductStatusByProduct($product->uuid)->first();
+
+        if( !empty($statusNew) && ( empty($lastProductStatus) || $statusNew->name !== $lastProductStatus->name) )
+            StatusProduct::createReferenceStatusWithProduct(['product_uuid'=>$product->uuid, 'status_id'=>$statusNew->id]);
 
         return redirect()
             ->route('product.edit', [$product->uuid])
@@ -286,22 +332,30 @@ class ProductsController extends Controller
     /**
      * Метод конвертирует значение цены в читаемое для пользователя
      */
-    public static function toPriceForDisplay($price) : string
+    public static function toPriceForDisplay($price, $withThousandSpaces = false) : string
     {
 //        return $price > 0 ? round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2) : 0.0;
 //        $number = round($price / self::PRODUCT_MONEY_FIX_NUMBER, 2);
         $number = $price / self::PRODUCT_MONEY_FIX_NUMBER;
-        return number_format($number, 2, '.', ' ');
+        return number_format($number, 2, '.', $withThousandSpaces ? ' ' : '');
     }
 
     /**
-     * Метод конвертирует значение цены в читаемое для пользователя
+     * Метод конвертирует значение цены для записи в базу данных поправив и множив на 10000
      */
     public static function toPriceForDB($price) : int
     {
-        return (int) $price * self::PRODUCT_MONEY_FIX_NUMBER; // x 10000
+//        return (int) ($price * self::PRODUCT_MONEY_FIX_NUMBER);
+        $price_f = $price * self::PRODUCT_MONEY_FIX_NUMBER;
+        return (int) number_format($price_f, 0, '', false);
     }
 
+    /**
+     * Удаление пробелов из строки "числа"
+     */
+    public static function removeSpaces($price){
+        return mb_ereg_replace('\s', '', $price);
+    }
 
 
 }

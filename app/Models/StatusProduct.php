@@ -12,38 +12,64 @@ class StatusProduct extends Model
 
     protected $table = 'product_statuses';
 
-    //todo может удалить, не используется?
-    /**
-     * Метод создает запись связывающую продукт со статусом, тем самым меняя статус продукта
-     */
-    public static function createManyToManyWithStatus(int $product_id, int $status_id) : bool {
-//      $dateTimeNow = date('YYYY-MM-DD hh:mm:ss'); // MySql format date time
-        $dateTimeNow = date('Y-m-d H:i');
-
-        return DB::table('status_product')
-            ->insert([
-                'product_id' => $product_id,
-                'status_id' => $status_id,
-                'created_at' => $dateTimeNow,
-                'updated_at' => $dateTimeNow,
-            ]);
-    }
-
-
-
 
     public static function createReferenceStatusWithProduct(array $statusProduct)
     {
-        $dateTimeNow = date('Y-m-d H:i');
+        $dateTimeNow = date('Y-m-d H:i:s');
 
-        DB::table('status_product')
-            ->insert([
-                'product_uuid' => $statusProduct['product_uuid'],
-                'status_id' => $statusProduct['status_id'],
-                'created_at' => $dateTimeNow,
-                'updated_at' => $dateTimeNow,
-            ]);
+        $data = [
+            'product_uuid' => $statusProduct['product_uuid'],
+            'status_id' => $statusProduct['status_id'],
+            'created_at' => $dateTimeNow,
+            'updated_at' => $dateTimeNow,
+        ];
+
+        $result = DB::table('status_product')->insert($data);
     }
+
+    /**
+     * Получить все статусы продукта за все время существования продукта
+     */
+    public static function getAllProductStatusesByProduct($product_uuid)
+    {
+        return DB::table('status_product as sp')
+            ->leftJoin('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
+            ->where('sp.product_uuid', '=', $product_uuid)
+            ->orderBy('sp.created_at', 'asc') // desc
+            ->get();
+    }
+
+    /**
+     * Получить один последний статус продукта за все время существования продукта
+     */
+    public static function getLastProductStatusByProduct($product_uuid)
+    {
+        return DB::table('status_product as sp')
+            ->join('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
+            ->where('sp.product_uuid', '=', $product_uuid)
+            ->select(
+                '*',
+                'sp.created_at as sp_created_at',
+                'sp.updated_at as sp_updated_at',
+            )
+//            ->orderBy('sp.created_at', 'desc') // desc
+//            ->limit(1)
+            ->get();
+    }
+
+
+
+    /**
+     * получить все имеющиеся варианты статусов продукта в системе
+     */
+    public static function getAllProductStatuses()
+    {
+        return DB::table('product_statuses as pss')
+            ->orderBy('pss.id', 'asc')
+            ->get();
+    }
+
+
 
 
 

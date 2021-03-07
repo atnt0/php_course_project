@@ -22,6 +22,12 @@ if( checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-
     require('./scripts/product/show/changeQuantity');
 }
 
+if( checkLocationByRegEx(/^\/product\/[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\/edit$/i)
+    || checkLocation('/product/create') ) {
+    require('./scripts/product/checkInputPrices.js');
+    require('./scripts/product/show/changeQuantity');
+}
+
 // if( window.location.pathname.match(new RegExp(/^\/cart$/i)) ) {
 if( checkLocation('/cart') ) {
     require('./scripts/cart/removeFromCart');

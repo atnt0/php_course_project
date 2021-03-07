@@ -15,14 +15,12 @@
                 <a href="{{ route('product.photo.edit', $productPhoto['uuid']) }}"
                    class="btn btn-sm btn-primary">Edit</a>
 
-{{--                <div class="buttons-item d-inline-block">--}}
-                    <form action="{{ route('product.photo.destroy', [$productPhoto->uuid]) }}" method="post"
-                          style=" display: inline-block; ">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger" type="submit">Delete</button>
-                    </form>
-{{--                </div>--}}
+                <form action="{{ route('product.photo.destroy', [$productPhoto->uuid]) }}" method="post"
+                      style=" display: inline-block; ">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                </form>
             </div>
         </div>
     </div>

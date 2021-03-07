@@ -14,7 +14,7 @@ $(document).ready(function(){
         let el = $(this);
         let parent = el.parents('.block_quantity');
 
-        let product_quantity_input = parent.find('[name="product_quantity"]');
+        let product_quantity_input = parent.find('[name="product_quantity"], [name="quantity"]');
         let down_product_quantity_btn = parent.find('[name="btn_down_quantity"]');
         let up_product_quantity_btn = parent.find('[name="btn_up_quantity"]');
 

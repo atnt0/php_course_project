@@ -31,6 +31,19 @@ class Product extends Model
         'meta_description',
     ];
 
+    public $incrementing = false;
+    protected $primaryKey = 'uuid';
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+//    public function getRouteKeyName()
+//    {
+//        return 'uuid';
+//    }
+
 
     /**
      * @return \Illuminate\Support\Collection
@@ -39,12 +52,9 @@ class Product extends Model
     public static function getProducts()  { // : array
 
         return DB::table('products as p')
-            //->join('product_photos as ph', 'p.id', '=', 'ph.product_id') // array
-            ->leftJoin('product_categories as c', 'p.category_id', '=', 'c.id')
-
-            ->leftJoin('status_product as sp', 'p.uuid', '=', 'sp.product_uuid') // связующая
-            ->leftJoin('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
-
+            //->leftJoin('product_categories as c', 'p.category_id', '=', 'c.id')
+            //->leftJoin('status_product as sp', 'p.uuid', '=', 'sp.product_uuid') // связующая
+            //->leftJoin('product_statuses as pss', 'sp.status_id', '=', 'pss.id')
             ->select(
                 // продукт
                 'p.uuid as uuid',
@@ -64,21 +74,21 @@ class Product extends Model
                 'p.created_at as created_at',
                 'p.updated_at as updated_at',
                 // категория продукта
-                'c.title as category_title',
-                'c.title_ua as category_title_ua',
-                'c.title_ru as category_title_ru',
-                'c.description as category_description',
-                'c.description_ua as category_description_ua',
-                'c.description_ru as category_description_ru',
+//                'c.title as category_title',
+//                'c.title_ua as category_title_ua',
+//                'c.title_ru as category_title_ru',
+//                'c.description as category_description',
+//                'c.description_ua as category_description_ua',
+//                'c.description_ru as category_description_ru',
                 // Статус продукта
-                'pss.name as product_status_name',
-                'pss.title as product_status_title',
-                'pss.title_ua as product_status_title_ua',
-                'pss.title_ru as product_status_title_ru',
-                'sp.created_at as product_status_created_at',
-                'sp.updated_at as product_status_updated_at',
-
+//                'pss.name as product_status_name',
+//                'pss.title as product_status_title',
+//                'pss.title_ua as product_status_title_ua',
+//                'pss.title_ru as product_status_title_ru',
+//                'sp.created_at as product_status_created_at',
+//                'sp.updated_at as product_status_updated_at',
             )
+//            ->groupby('uuid')->distinct()
             //->pluck('id') // ->toArray();
             ->get();
     }

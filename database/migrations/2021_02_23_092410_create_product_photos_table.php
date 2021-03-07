@@ -16,7 +16,7 @@ class CreateProductPhotosTable extends Migration
         Schema::create('product_photos', function (Blueprint $table) {
             $table->string('uuid', 36)->unique()->nullable(false)->default('');
 
-            $table->string('product_uuid', 36);
+            $table->string('product_uuid', 36)->default('');
 
             $table->TinyInteger('index')->unsigned();; // порядковый номер, 0 - первое, отображается как главное изображение
 

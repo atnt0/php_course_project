@@ -72,9 +72,7 @@ class ProductPhotosController extends Controller
 
         $newFilePath = Storage::putFileAs( self::PRODUCT_PHOTO_SERVER_DIRECTORY, new File($file->getPathname()), $fileName); // new File($file->getPathname())
 
-
         $userId = Auth::user() ? Auth::user()->id : 0; // -1
-//        dd(['$userId'=>$userId]);
 
         $uuid = Uuid::generate()->string;
 
@@ -82,16 +80,9 @@ class ProductPhotosController extends Controller
 
         $description_ru = !empty($dirt_description_ru) && $dirt_description_ru != null ? $request->get('description_ru') : '';
 
-
-//        dd([
-//            'all' => $request->toArray(),
-//            '$dirt_description_ru' => $dirt_description_ru,
-//            '$description_ru' => $description_ru,
-//        ]);
-
         $productPhoto = new ProductPhotos([
             'uuid' => $uuid,
-            'product_id' => $product->id, // simple id
+            'product_uuid' => $product->uuid, // simple id
             'index' => $newIndex,
             'file_name' => $fileName,
             'user_own_id' => $userId,

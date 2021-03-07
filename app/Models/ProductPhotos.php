@@ -23,7 +23,18 @@ class ProductPhotos extends Model
         'description_ru',
     ];
 
+    public $incrementing = false;
+    protected $primaryKey = 'uuid';
 
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+//    public function getRouteKeyName()
+//    {
+//        return 'uuid';
+//    }
 
     /**
      * @return \Illuminate\Support\Collection

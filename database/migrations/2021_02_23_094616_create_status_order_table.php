@@ -17,7 +17,7 @@ class CreateStatusOrderTable extends Migration
             Schema::create('status_order', function (Blueprint $table) {
                 $table->id();
 
-                $table->string('order_uuid', 36);
+                $table->string('order_uuid', 36)->default('');
                 $table->bigInteger('status_id')->unsigned();
 
                 $table->foreign('order_uuid')->references('uuid')->on('orders');

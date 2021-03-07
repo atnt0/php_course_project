@@ -17,7 +17,7 @@ class CreateStatusProductTable extends Migration
             Schema::create('status_product', function (Blueprint $table) {
                 $table->id();
 
-                $table->string('product_uuid', 36);
+                $table->string('product_uuid', 36)->default('');
                 $table->bigInteger('status_id')->unsigned();
 
                 $table->foreign('product_uuid')->references('uuid')->on('products');

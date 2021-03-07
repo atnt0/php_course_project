@@ -45,7 +45,10 @@ class OrdersController extends Controller
         $userOwn = User::find($order->user_own_id);
 
         $dataOrder['user_own_name'] = $userOwn ? $userOwn->name : '';
+
         $dataOrder['total_price'] = 0;
+        $total_price_float = ProductsController::toPriceForDisplay(0, true);
+        $dataOrder['total_price_float'] = $total_price_float;
 
         if( count($products) > 0 )
         {
@@ -59,13 +62,12 @@ class OrdersController extends Controller
 
                 $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
-
-                $price_float = ProductsController::toPriceForDisplay($product->price);
-                $price_total = $product->op_quantity * $product->price;
-                $price_multi_float = ProductsController::toPriceForDisplay($price_total);
+                $price_float = ProductsController::toPriceForDisplay($product->op_price, true);
+                $price_total = $product->op_quantity * $product->op_price;
+                $price_multi_float = ProductsController::toPriceForDisplay($price_total, true);
 
                 $total_price = (int) $dataOrder['total_price'] + (int) $price_total;
-                $total_price_float = ProductsController::toPriceForDisplay($total_price);
+                $total_price_float = ProductsController::toPriceForDisplay($total_price, true);
                 $dataOrder['total_price'] = $total_price;
                 $dataOrder['total_price_float'] = $total_price_float;
 

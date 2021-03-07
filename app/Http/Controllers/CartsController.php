@@ -390,9 +390,9 @@ class CartsController extends Controller
             //todo перенести логику создания заказа в OrderController?
 
             $order = new Order([
-                'user_own_id' => $user_own_id,
-
                 'uuid' => $uuid,
+
+                'user_own_id' => $user_own_id,
 
                 'address_city' => $address_city,
                 'address_zip' => $address_zip,
@@ -416,7 +416,6 @@ class CartsController extends Controller
                 'guest_useragent' => $guest_useragent,
             ]);
 
-
             $order->save();
 
 
@@ -425,8 +424,8 @@ class CartsController extends Controller
 
                 foreach ($cart['products'] as $product) {
                     $arrayOrderProducts[] = [
-                        'order_id' => $order->id, // может все таки uuid?
-                        'product_id' => $product['id'], // может все таки uuid?
+                        'order_uuid' => $order->uuid,
+                        'product_uuid' => $product['uuid'],
                         'quantity' => $product['quantity'],
                         'price' => $product['price'],
                     ];
@@ -502,20 +501,21 @@ class CartsController extends Controller
     {
         $new_quantity = (int) (!empty($dataArray['post_quantity']) && $dataArray['post_quantity'] > 1 ? $dataArray['post_quantity'] : 1);
 
-        $price_float = ProductsController::toPriceForDisplay($productFromDB->price);
+        $price_float = ProductsController::toPriceForDisplay($productFromDB->price, true);
 
         $multi_price = $productFromDB->price * $new_quantity;
-        $multi_price_float = ProductsController::toPriceForDisplay($multi_price);
+        $multi_price_float = ProductsController::toPriceForDisplay($multi_price, true);
 
         //todo firstOrFail(); выдает ошибку
-        $productPhoto = ProductPhotos::where('product_id', '=', $productFromDB->id)->orderBy('index', 'asc')->first();
+        $productPhoto = ProductPhotos::where('product_uuid', '=', $productFromDB->uuid)
+            ->orderBy('index', 'asc')->first();
         $dataProductPhoto = ProductPhotosController::getPreDataForPhoto($productPhoto);
 
         $newIndex = count($cart['products']) + 1;
 
         $productCart = [
             'index' => $newIndex,
-            'id' => $productFromDB->id,
+//            'id' => $productFromDB->id,
             'uuid' => $productFromDB->uuid,
 
             'title_ru' => $productFromDB->title_ru,
@@ -554,7 +554,7 @@ class CartsController extends Controller
         $productCart['quantity'] = $now_quantity;
 
         $multi_price = $productFromDB->price * $now_quantity;
-        $multi_price_float = ProductsController::toPriceForDisplay($multi_price);
+        $multi_price_float = ProductsController::toPriceForDisplay($multi_price, true);
 
         $productCart['multi_price'] = $multi_price;
         $productCart['multi_price_float'] = $multi_price_float;
@@ -576,7 +576,7 @@ class CartsController extends Controller
             }
             $dataCart['total_price'] = $now_total_price;
 
-            $dataCart_total_price_float = ProductsController::toPriceForDisplay($dataCart['total_price']);
+            $dataCart_total_price_float = ProductsController::toPriceForDisplay($dataCart['total_price'], true);
             $dataCart['total_price_float'] = $dataCart_total_price_float;
 
             $cart['dataCart'] = $dataCart;

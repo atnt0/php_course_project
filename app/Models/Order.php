@@ -40,15 +40,18 @@ class Order extends Model
         'guest_useragent',
     ];
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
+    public $incrementing = false;
+    protected $primaryKey = 'uuid';
+
+//    /**
+//     * Get the route key for the model.
+//     *
+//     * @return string
+//     */
+//    public function getRouteKeyName()
+//    {
+//        return 'uuid';
+//    }
 
 
 
@@ -63,12 +66,28 @@ class Order extends Model
 //    public static function getProducts($order_id){
     public function getProducts()
     {
-
+        //todo лучше вызвать из Product
         return DB::table('order_product as o_p')
             ->leftjoin('products as p', 'o_p.product_uuid', '=', 'p.uuid' )
             ->where('order_uuid', '=', $this->uuid)
             ->select(
-                'p.*', //todo убрать звездочку
+                'p.uuid as uuid',
+                'p.article_number as article_number',
+                'p.price as price',
+                'p.quantity as quantity',
+                'p.category_id as category_id',
+                'p.user_own_id as user_own_id',
+                'p.title as title',
+                'p.title_ua as title_ua',
+                'p.title_ru as title_ru',
+                'p.description as description',
+                'p.description_ua as description_ua',
+                'p.description_ru as description_ru',
+                'p.meta_keywords as meta_keywords',
+                'p.meta_description as meta_description',
+                'p.created_at as created_at',
+                'p.updated_at as updated_at',
+                // значения из связи
                 'o_p.quantity as op_quantity',
                 'o_p.price as op_price',
             )
