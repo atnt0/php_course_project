@@ -18,7 +18,6 @@
     <li>&#9989; ProductPhotosController - контроллер для фотографий продукта</li>
     <li>&#9989; OrdersController - контроллер для заказов</li>
     <li>&#9989; CartsController - контроллер для корзин</li>
-    <li>&#10060; ProductTagsController - контроллер для тегов продуктов</li>
     <li>&#10060; AttributesController - контроллер для атрибутов (для поиска) товаров/категорий</li>
     <li>&#10060; UsersController - контроллер для управления пользователями</li>
 </ul>
@@ -27,13 +26,14 @@
 
 ##### **План Базы Данных:**
 
-<img src="DB_Schema.png" width="100%" height="auto">
+<img src="DB_Schema_v2.png" width="100%" height="auto">
 
 =====================
 
 ##### **Идей на будущее:**
 
 <ul style="list-style:none;">
+    <li>- ProductTagsController - контроллер для тегов продуктов</li>
     <li>- в корзину/предзаказ/сообщить о наличии (подписка на оповещение по почте/телефону)</li>
     <li>- бренд продукта</li>
     <li>- купоны/промокоды/акции на продукцию или наборы</li>
