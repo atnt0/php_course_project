@@ -77,6 +77,10 @@ class ProductCategoriesController extends Controller
 
         $breadcrumbs = ProductCategoriesController::getParents($category->id);
 
+//        dd([
+//            'breadcrumbs' => $breadcrumbs,
+//        ]);
+
         $dataCategory = [
             'breadcrumbs' => $breadcrumbs,
         ];
@@ -184,40 +188,23 @@ class ProductCategoriesController extends Controller
     /**
      * Функция возвращает одномерный массив родителей категории
      */
-    public static function getParents($category_id, $max = 2){
-
-        function getParentsFromDBRecurcive($obj, $category_id = null)
+    public static function getParents($category_id, $max = 5)
+    {
+        $arr = [];
+        function getParentsFromDBRecurcive($category_id = null, &$arr = [])
         {
             if( $category_id !== null ) {
-                $object = ProductCategories::where('id', '=', $category_id)->first()->toArray();
-                $next = [];
-                if( !empty($object['parent_id']) ){
-                    $next = getParentsFromDBRecurcive($obj, $object['parent_id']);
-                }
-                $obj = [
-                    'object' => $object,
-                    'next' => $next,
-                ];
+                $recordFromDB = ProductCategories::where('id', '=', $category_id)->first()->toArray();
+                $arr[] = $recordFromDB;
+                if( !empty($recordFromDB['parent_id']) )
+                    getParentsFromDBRecurcive($recordFromDB['parent_id'], $arr);
             }
-            return $obj;
+
+            return $arr;
         }
 
-        $arr = [];
-        $categories = getParentsFromDBRecurcive($arr, $category_id);
-
-        $arrayKeys = ['id', 'slug', 'title_ru'];
-        $results = [];
-        array_walk_recursive($categories, function ($item, $key) use (&$results, &$arrayKeys) {
-            if( in_array($key, $arrayKeys) )
-                $results[$key][] = $item;
-        });
-
-        $items = [];
-        if( count($results) > 0 )
-            foreach ($results as $key1 => $result)
-                foreach ($result as $key2 => $item)
-                    $items[$key2][$key1] = $item;
-        $items = array_reverse($items);
+        $categories = getParentsFromDBRecurcive($category_id);
+        $items = array_reverse($categories);
 
         return $items;
     }

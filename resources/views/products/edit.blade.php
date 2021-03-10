@@ -34,7 +34,7 @@
 
             <div class="col-2">
                 <div class="form-group">
-                    <label for="quantity">Quantity:</label>
+                    <label for="quantity">Quantity in stock:</label>
 
                     <div class="block_quantity" data-action="{{ route('cart.changeQuantityProductInCart', ['product_uuid' => $product->uuid]) }}">
                         {{--  <input type="number" class="form-control" name="add_to_cart[quantity]" value="1">--}}

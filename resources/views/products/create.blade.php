@@ -26,7 +26,7 @@
 
             <div class="col-2">
                 <div class="form-group">
-                    <label for="number">Quantity:</label>
+                    <label for="number">Quantity in stock:</label>
                     <input type="number" class="form-control text-center" name="quantity" value="10"/>
                 </div>
             </div>
